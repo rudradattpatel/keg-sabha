@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Keg Sabha</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#C9A84C;--gold-light:#E8C96A;--gold-dark:#9A7A2E;
+  --brass:#B8964A;--bronze:#8C6430;
+  --bg:#0A0A08;--bg-card:#181816;--bg-card2:#1E1E1B;
+  --border:#2A2A26;--border-gold:rgba(201,168,76,0.3);
+  --text:#E8E4D9;--text-muted:#8A8670;--text-dim:#555445;
+  --green:#5A9A5A;--red:#C44444;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A84C' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,8,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-gold);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;gap:8px}
+.nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-title{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--gold);letter-spacing:0.12em;white-space:nowrap}
+.nav-tabs{display:flex;gap:2px}
+.nav-tab{font-size:0.75rem;font-weight:500;letter-spacing:0.05em;color:var(--text-muted);padding:6px 12px;border-radius:6px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;border:none;background:none;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.nav-tab:hover{color:var(--text);background:rgba(201,168,76,0.08)}
+.nav-tab.active{color:var(--gold);background:rgba(201,168,76,0.12)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-user{font-size:0.75rem;color:var(--text-muted)}
+.nav-user span{color:var(--gold)}
+.btn-logout{font-size:0.72rem;padding:5px 12px;border:1px solid var(--border);background:none;color:var(--text-muted);border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+
+/* MAIN */
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 1.5rem 4rem}
+.page{display:none}
+.page.active{display:block}
+
+/* AUTH */
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.auth-box{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:16px;padding:2.5rem;width:100%;max-width:420px;position:relative;overflow:hidden}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.auth-keg{font-size:3rem;text-align:center;display:block;margin-bottom:1rem;animation:kegFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(201,168,76,0.3))}
+@keyframes kegFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.auth-title{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;color:var(--gold);text-align:center;letter-spacing:0.08em;margin-bottom:0.25rem}
+.auth-sub{font-size:0.8rem;color:var(--text-muted);text-align:center;font-style:italic;margin-bottom:2rem}
+.auth-tabs{display:flex;gap:4px;background:var(--bg);border-radius:8px;padding:3px;margin-bottom:1.5rem}
+.auth-tab{flex:1;padding:7px;border-radius:5px;border:none;background:none;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.2s;text-align:center}
+.auth-tab.active{background:var(--bg-card2);color:var(--gold);border:1px solid var(--border-gold)}
+.form-group{margin-bottom:1rem}
+.form-label{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:6px}
+.form-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;transition:border-color 0.2s;outline:none}
+.form-input:focus{border-color:var(--border-gold)}
+.form-input::placeholder{color:var(--text-dim)}
+.btn-primary{width:100%;padding:11px;background:var(--gold);color:#0A0A08;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;margin-top:0.5rem}
+.btn-primary:hover{background:var(--gold-light)}
+.btn-primary:active{transform:scale(0.98)}
+.auth-err{font-size:0.78rem;color:var(--red);text-align:center;margin-top:0.75rem;min-height:20px}
+.auth-note{font-size:0.72rem;color:var(--text-dim);text-align:center;margin-top:1rem;line-height:1.5}
+.auth-note span{color:var(--gold-dark)}
+
+/* HOMEPAGE */
+.hero{text-align:center;padding:3rem 0 2rem}
+.hero-overline{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.4em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:1.25rem}
+.hero-keg{font-size:64px;display:block;margin:0 auto 1rem;animation:kegFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 25px rgba(201,168,76,0.35))}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:var(--gold);letter-spacing:0.08em;line-height:1.1;margin-bottom:0.5rem}
+.hero-tag{font-size:0.9rem;color:var(--text-muted);font-style:italic;margin-bottom:2rem}
+.divider{display:flex;align-items:center;gap:12px;margin:0 auto 2rem;max-width:250px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark))}
+.divider::after{background:linear-gradient(90deg,var(--gold-dark),transparent)}
+.divider-icon{font-size:11px;color:var(--gold)}
+
+/* MEMBERS GRID */
+.members-section{margin-top:1rem}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.section-title{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dark)}
+.section-title::before{content:'▸ ';color:var(--gold)}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text-dim);font-size:0.9rem;background:var(--bg-card);border:1px dashed var(--border);border-radius:12px}
+.empty-state .empty-icon{font-size:2.5rem;display:block;margin-bottom:1rem;opacity:0.4}
+.members-list{display:flex;flex-direction:column;gap:1.5rem}
+
+/* MEMBER CARD */
+.member-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 0.2s}
+.member-card:hover{border-color:var(--border-gold)}
+.member-header{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.25rem 1rem}
+.member-ava{width:48px;height:48px;border-radius:50%;background:var(--bg-card2);border:2px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;font-family:'Cinzel',serif;font-weight:700;color:var(--gold)}
+.member-info{flex:1}
+.member-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--text)}
+.member-phone{font-size:0.75rem;color:var(--text-dim);margin-top:2px}
+.member-total{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);text-align:right}
+.member-total-lbl{font-size:0.62rem;color:var(--text-dim);letter-spacing:0.1em;text-align:right}
+
+/* CHART BARS */
+.chart-section{padding:0 1.25rem 1.25rem}
+.chart-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-name{font-size:0.75rem;color:var(--text-muted);width:90px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:18px;background:var(--bg);border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--bronze),var(--gold));transition:width 0.8s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;min-width:24px}
+.bar-val{font-size:0.65rem;font-family:'Cinzel',serif;color:#0A0A08;font-weight:700}
+.bar-empty{font-size:0.65rem;color:var(--text-dim);padding-left:8px}
+.bar-self{background:linear-gradient(90deg,#4A6A4A,#7AC47A)}
+.bar-avg{background:linear-gradient(90deg,var(--bronze),var(--gold))}
+
+/* ACHIEVEMENTS PAGE */
+.page-title-sec{padding:2rem 0 0}
+.page-title{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:700;color:var(--gold);letter-spacing:0.06em}
+.page-sub{font-size:0.85rem;color:var(--text-muted);margin-top:5px}
+
+.btn-gold{padding:8px 18px;background:var(--gold);color:#0A0A08;border:none;border-radius:7px;font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s}
+.btn-gold:hover{background:var(--gold-light)}
+.btn-outline{padding:7px 16px;background:none;color:var(--text-muted);border:1px solid var(--border);border-radius:7px;font-size:0.78rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.btn-outline:hover{border-color:var(--border-gold);color:var(--gold)}
+.btn-danger{padding:5px 12px;background:none;color:var(--red);border:1px solid rgba(204,68,68,0.3);border-radius:6px;font-size:0.72rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.btn-danger:hover{background:rgba(204,68,68,0.1)}
+
+/* ACHIEVEMENT CARDS */
+.achievement-list{display:flex;flex-direction:column;gap:1rem;margin-top:1.25rem}
+.ach-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color 0.2s}
+.ach-card:hover{border-color:var(--border-gold)}
+.ach-header{padding:1rem 1.25rem 0.75rem;border-bottom:1px solid var(--border)}
+.ach-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.ach-title{font-size:0.95rem;font-weight:600;color:var(--text)}
+.ach-cat{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid var(--border-gold);color:var(--gold-dark);background:rgba(201,168,76,0.08);white-space:nowrap}
+.ach-desc{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
+.ach-meta{font-size:0.72rem;color:var(--text-dim);margin-top:5px}
+.ach-scores{padding:0.75rem 1.25rem;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap}
+.ach-score-item{text-align:center}
+.ach-score-val{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)}
+.ach-score-lbl{font-size:0.62rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
+.ach-rate-btn{margin-left:auto;padding:7px 16px;background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--border-gold);border-radius:6px;font-size:0.78rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.ach-rate-btn:hover{background:rgba(201,168,76,0.2)}
+.ach-rate-btn.rated{color:var(--green);border-color:rgba(90,154,90,0.4);background:rgba(90,154,90,0.08)}
+.ach-owner{font-size:0.75rem;color:var(--text-dim)}
+.ach-owner span{color:var(--gold-dark)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:14px;padding:2rem;width:100%;max-width:480px;position:relative;max-height:90vh;overflow-y:auto}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:14px 14px 0 0}
+.modal-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:1.5rem;letter-spacing:0.08em}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-dim);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px 8px}
+.modal-close:hover{color:var(--text)}
+
+/* STAR RATING */
+.star-row{display:flex;gap:8px;align-items:center;margin-top:0.5rem}
+.star{font-size:1.5rem;cursor:pointer;transition:transform 0.1s;line-height:1;color:var(--text-dim)}
+.star:hover,.star.active{color:var(--gold);transform:scale(1.15)}
+.rating-label{font-size:0.8rem;color:var(--text-muted);margin-left:8px}
+
+/* ADMIN PAGE */
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+@media(max-width:700px){.admin-grid{grid-template-columns:1fr}}
+.admin-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem}
+.admin-card h3{font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold-dark);letter-spacing:0.1em;margin-bottom:1rem}
+.member-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(42,42,38,0.4)}
+.member-row:last-child{border-bottom:none}
+.member-row-name{font-size:0.85rem;font-weight:500}
+.member-row-phone{font-size:0.72rem;color:var(--text-dim)}
+.badge-admin{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid var(--border-gold)}
+
+/* CATEGORIES */
+.cat-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:0.5rem}
+.cat-chip{font-size:0.72rem;padding:4px 10px;border-radius:4px;border:1px solid var(--border-gold);color:var(--gold-dark);background:rgba(201,168,76,0.08);cursor:pointer;transition:all 0.2s}
+.cat-chip.sel{background:rgba(201,168,76,0.2);color:var(--gold)}
+
+/* MISC */
+.flex-gap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select.form-input{appearance:none;cursor:pointer}
+textarea.form-input{resize:vertical;min-height:80px}
+.msg-success{font-size:0.78rem;color:var(--green);margin-top:0.5rem}
+.msg-error{font-size:0.78rem;color:var(--red);margin-top:0.5rem}
+
+/* PROFILE PAGE */
+.profile-grid{display:grid;grid-template-columns:300px 1fr;gap:1.5rem;margin-top:1.5rem}
+@media(max-width:800px){.profile-grid{grid-template-columns:1fr}}
+.profile-card{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:12px;padding:1.5rem;text-align:center;position:relative;overflow:hidden}
+.profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.profile-ava{width:72px;height:72px;border-radius:50%;background:var(--bg-card2);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1rem;font-family:'Cinzel',serif;font-weight:700;color:var(--gold)}
+.profile-name{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:4px}
+.profile-phone{font-size:0.78rem;color:var(--text-dim);margin-bottom:1rem}
+.profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:1rem}
+.pstat{background:var(--bg);border-radius:7px;padding:10px;text-align:center}
+.pstat-val{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold-dark)}
+.pstat-lbl{font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em}
+
+/* PROGRESS */
+.progress-wrap{margin-top:1.25rem}
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.prog-name{font-size:0.78rem;color:var(--text-muted);width:80px;flex-shrink:0}
+.prog-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--bronze),var(--gold));transition:width 0.8s}
+.prog-val{font-size:0.72rem;color:var(--gold-dark);font-family:'Cinzel',serif;width:28px;text-align:right}
+</style>
+</head>
+<body>
+
+<!-- NAV (hidden until logged in) -->
+<nav id="main-nav" style="display:none">
+  <div class="nav-brand" onclick="showPage('home')">
+    <span style="font-size:20px">🍺</span>
+    <span class="nav-title">THE KEG SABHA</span>
+  </div>
+  <div class="nav-tabs" id="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('home')">Home</button>
+    <button class="nav-tab" onclick="showPage('achievements')">Deeds</button>
+    <button class="nav-tab" onclick="showPage('profile')">My Profile</button>
+    <button class="nav-tab admin-only" onclick="showPage('admin')" style="display:none">Admin</button>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="nav-user-name"></span>
+    <button class="btn-logout" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- AUTH PAGE -->
+<div id="auth-page">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <span class="auth-keg">🍺</span>
+      <h1 class="auth-title">THE KEG SABHA</h1>
+      <p class="auth-sub">One Keg. One Sabha. One Champion.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+        <button class="auth-tab" onclick="switchAuthTab('signup')">Join the Sabha</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="login-form">
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" id="login-phone" type="tel" placeholder="+1 555 000 0000" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" id="login-pass" type="password" placeholder="••••••••" />
+        </div>
+        <button class="btn-primary" onclick="login()">Enter the Sabha</button>
+        <div class="auth-err" id="login-err"></div>
+      </div>
+
+      <!-- SIGNUP -->
+      <div id="signup-form" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" id="signup-name" type="text" placeholder="Your name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" id="signup-phone" type="tel" placeholder="+1 555 000 0000" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" id="signup-pass" type="password" placeholder="Create a password" />
+        </div>
+        <button class="btn-primary" onclick="signup()">Join the Sabha</button>
+        <div class="auth-err" id="signup-err"></div>
+        <p class="auth-note">By joining you agree to the sacred rules of the Sabha.<br><span>Brotherhood. Competition. Legacy.</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<main id="main-app" style="display:none">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-overline" id="season-label">Season IV · 2025</div>
+      <span class="hero-keg">🍺</span>
+      <h1 class="hero-title">THE KEG SABHA</h1>
+      <p class="hero-tag">One Keg. One Sabha. One Champion.</p>
+      <div class="divider"><span class="divider-icon">⚜</span></div>
+    </div>
+    <div class="members-section">
+      <div class="section-hdr">
+        <span class="section-title">Brotherhood Rankings</span>
+        <span style="font-size:0.75rem;color:var(--text-dim)" id="member-count-label"></span>
+      </div>
+      <div id="members-list-home"></div>
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENTS / DEEDS -->
+  <div class="page" id="page-achievements">
+    <div class="page-title-sec">
+      <h1 class="page-title">The Deed Hall</h1>
+      <p class="page-sub">Post your conquests. Let the Sabha judge.</p>
+    </div>
+    <div style="margin-top:1.25rem" class="flex-gap">
+      <button class="btn-gold" onclick="openAddAchModal()">+ Post a Deed</button>
+      <select class="form-input" id="filter-cat" onchange="renderAchievements()" style="width:auto;padding:7px 12px;font-size:0.8rem">
+        <option value="">All Categories</option>
+        <option>Business</option><option>Career</option><option>Finance</option>
+        <option>Fitness</option><option>Travel</option><option>Adventure</option>
+        <option>Education</option><option>Family</option><option>Community</option>
+        <option>Wild Card</option>
+      </select>
+      <select class="form-input" id="filter-member" onchange="renderAchievements()" style="width:auto;padding:7px 12px;font-size:0.8rem">
+        <option value="">All Members</option>
+      </select>
+    </div>
+    <div class="achievement-list" id="achievements-list"></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="page-profile">
+    <div class="page-title-sec">
+      <h1 class="page-title">My Profile</h1>
+      <p class="page-sub">Your legend, your stats, your deeds.</p>
+    </div>
+    <div class="profile-grid">
+      <div>
+        <div class="profile-card">
+          <div class="profile-ava" id="profile-ava-text">?</div>
+          <div class="profile-name" id="profile-name-text"></div>
+          <div class="profile-phone" id="profile-phone-text"></div>
+          <div class="profile-stats">
+            <div class="pstat"><div class="pstat-val" id="profile-deeds-count">0</div><div class="pstat-lbl">Deeds</div></div>
+            <div class="pstat"><div class="pstat-val" id="profile-avg-score">0</div><div class="pstat-lbl">Avg Score</div></div>
+            <div class="pstat"><div class="pstat-val" id="profile-total-pts">0</div><div class="pstat-lbl">Total Pts</div></div>
+            <div class="pstat"><div class="pstat-val" id="profile-votes-given">0</div><div class="pstat-lbl">Votes Given</div></div>
+          </div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-top:1rem">
+          <div class="section-hdr" style="margin-bottom:0.75rem"><span class="section-title">Score by Category</span></div>
+          <div class="progress-wrap" id="profile-cats"></div>
+        </div>
+      </div>
+      <div>
+        <div class="section-hdr"><span class="section-title">My Deeds</span><button class="btn-gold" style="font-size:0.7rem;padding:6px 14px" onclick="openAddAchModal()">+ Post Deed</button></div>
+        <div id="my-achievements-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="page" id="page-admin">
+    <div class="page-title-sec">
+      <h1 class="page-title">Admin Panel</h1>
+      <p class="page-sub">Manage the Brotherhood.</p>
+    </div>
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h3>▸ Add Member</h3>
+        <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="admin-name" placeholder="Member name" /></div>
+        <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="admin-phone" type="tel" placeholder="+1 555 000 0000" /></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="admin-pass" type="password" placeholder="Temporary password" /></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="admin-is-admin" style="accent-color:var(--gold)">
+          <label for="admin-is-admin" style="font-size:0.82rem;color:var(--text-muted)">Grant admin rights</label>
+        </div>
+        <button class="btn-gold" onclick="adminAddMember()">Add Member</button>
+        <div id="admin-member-msg" class="msg-success" style="display:none"></div>
+      </div>
+      <div class="admin-card">
+        <h3>▸ Manage Members</h3>
+        <div id="admin-members-list"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ADD ACHIEVEMENT MODAL -->
+<div class="modal-overlay" id="add-ach-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('add-ach-modal')">✕</button>
+    <div class="modal-title">Post a New Deed</div>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ach-title" placeholder="What did you accomplish?" /></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="ach-desc" placeholder="Tell the story..."></textarea></div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-input" id="ach-cat">
+        <option>Business</option><option>Career</option><option>Finance</option>
+        <option>Fitness</option><option>Travel</option><option>Adventure</option>
+        <option>Education</option><option>Family</option><option>Community</option>
+        <option>Wild Card</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Your Self-Rating (1–10)</label>
+      <div class="star-row" id="self-stars"></div>
+      <input type="hidden" id="ach-self-rating" value="0" />
+    </div>
+    <button class="btn-primary" onclick="submitAchievement()">Post to the Sabha</button>
+    <div id="ach-msg" class="msg-error" style="display:none"></div>
+  </div>
+</div>
+
+<!-- RATE MODAL -->
+<div class="modal-overlay" id="rate-modal">
+  <div class="modal" style="max-width:380px">
+    <button class="modal-close" onclick="closeModal('rate-modal')">✕</button>
+    <div class="modal-title">Rate This Deed</div>
+    <div id="rate-ach-info" style="margin-bottom:1.25rem"></div>
+    <div class="form-group">
+      <label class="form-label">Your Rating (1–10)</label>
+      <div class="star-row" id="rate-stars"></div>
+      <input type="hidden" id="rate-value" value="0" />
+    </div>
+    <button class="btn-primary" onclick="submitRating()">Submit Rating</button>
+    <div id="rate-msg" class="msg-success" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA LAYER — localStorage persistence
+// ══════════════════════════════════════════
+const DB = {
+  get(key){ try{ return JSON.parse(localStorage.getItem('ks_'+key)||'null') }catch(e){ return null } },
+  set(key,val){ localStorage.setItem('ks_'+key, JSON.stringify(val)) },
+  init(){
+    if(!this.get('members')){
+      // Create default admin
+      this.set('members',[{
+        id:'admin_001', name:'Admin', phone:'0000000000',
+        password:'admin123', isAdmin:true, joinedAt: Date.now()
+      }]);
+    }
+    if(!this.get('achievements')) this.set('achievements',[]);
+    if(!this.get('ratings')) this.set('ratings',[]);
+    if(!this.get('session')) this.set('session',null);
+  }
+};
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function getMembers(){ return DB.get('members')||[] }
+function getAchievements(){ return DB.get('achievements')||[] }
+function getRatings(){ return DB.get('ratings')||[] }
+function currentUser(){ return DB.get('session') }
+
+function initials(name){
+  return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+}
+
+function avgRatingForAch(achId){
+  const rats = getRatings().filter(r=>r.achId===achId);
+  if(!rats.length) return null;
+  return (rats.reduce((s,r)=>s+r.rating,0)/rats.length).toFixed(1);
+}
+
+function memberScore(memberId){
+  const myAchs = getAchievements().filter(a=>a.memberId===memberId);
+  let total = 0;
+  myAchs.forEach(a=>{
+    const avg = avgRatingForAch(a.id);
+    if(avg) total += parseFloat(avg);
+    else if(a.selfRating) total += a.selfRating;
+  });
+  return total;
+}
+
+function memberScoreByCategory(memberId){
+  const cats = {};
+  const myAchs = getAchievements().filter(a=>a.memberId===memberId);
+  myAchs.forEach(a=>{
+    const avg = avgRatingForAch(a.id);
+    const score = avg ? parseFloat(avg) : (a.selfRating||0);
+    cats[a.category] = (cats[a.category]||0) + score;
+  });
+  return cats;
+}
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7) }
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+function switchAuthTab(tab){
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>{
+    t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='signup'));
+  });
+  document.getElementById('login-form').style.display = tab==='login'?'block':'none';
+  document.getElementById('signup-form').style.display = tab==='signup'?'block':'none';
+}
+
+function login(){
+  const phone = document.getElementById('login-phone').value.trim().replace(/\D/g,'');
+  const pass = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-err');
+  if(!phone||!pass){ err.textContent='Enter phone and password.'; return; }
+  const members = getMembers();
+  const member = members.find(m=>m.phone.replace(/\D/g,'')=== phone && m.password===pass);
+  if(!member){ err.textContent='Invalid credentials. Check your phone number and password.'; return; }
+  DB.set('session', member);
+  err.textContent='';
+  startApp();
+}
+
+function signup(){
+  const name = document.getElementById('signup-name').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim().replace(/\D/g,'');
+  const pass = document.getElementById('signup-pass').value;
+  const err = document.getElementById('signup-err');
+  if(!name||!phone||!pass){ err.textContent='All fields required.'; return; }
+  if(pass.length<6){ err.textContent='Password must be at least 6 characters.'; return; }
+  const members = getMembers();
+  if(members.find(m=>m.phone.replace(/\D/g,'')=== phone)){ err.textContent='Phone number already registered.'; return; }
+  const newMember = { id: uid(), name, phone, password: pass, isAdmin: false, joinedAt: Date.now() };
+  members.push(newMember);
+  DB.set('members', members);
+  DB.set('session', newMember);
+  err.textContent='';
+  startApp();
+}
+
+function logout(){
+  DB.set('session', null);
+  document.getElementById('main-nav').style.display='none';
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('auth-page').style.display='block';
+  document.getElementById('login-phone').value='';
+  document.getElementById('login-pass').value='';
+  switchAuthTab('login');
+}
+
+// ══════════════════════════════════════════
+// APP START
+// ══════════════════════════════════════════
+function startApp(){
+  const user = currentUser();
+  if(!user) return;
+  document.getElementById('auth-page').style.display='none';
+  document.getElementById('main-nav').style.display='flex';
+  document.getElementById('main-app').style.display='block';
+  document.getElementById('nav-user-name').innerHTML = 'Welcome, <span>'+user.name+'</span>';
+  // Show admin tab
+  const adminTab = document.querySelector('.admin-only');
+  if(user.isAdmin) adminTab.style.display='inline-block';
+  else adminTab.style.display='none';
+  buildFilterDropdowns();
+  showPage('home');
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if(pg) pg.classList.add('active');
+  const tabMap={home:0,achievements:1,profile:2,admin:3};
+  const tabs = document.querySelectorAll('.nav-tab');
+  if(tabMap[id]!==undefined && tabs[tabMap[id]]) tabs[tabMap[id]].classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='home') renderHome();
+  if(id==='achievements') renderAchievements();
+  if(id==='profile') renderProfile();
+  if(id==='admin') renderAdmin();
+}
+
+// ══════════════════════════════════════════
+// HOME — member ranking with bar charts
+// ══════════════════════════════════════════
+function renderHome(){
+  const members = getMembers().filter(m=>!m.isAdmin);
+  const container = document.getElementById('members-list-home');
+  document.getElementById('member-count-label').textContent = members.length+' members';
+
+  if(!members.length){
+    container.innerHTML = '<div class="empty-state"><span class="empty-icon">🍺</span>No members yet. Be the first to join the Sabha!</div>';
+    return;
+  }
+
+  // Sort by total score descending
+  const scored = members.map(m=>({ ...m, score: memberScore(m.id), cats: memberScoreByCategory(m.id) }));
+  scored.sort((a,b)=>b.score-a.score);
+
+  const maxScore = Math.max(...scored.map(s=>s.score), 1);
+
+  container.innerHTML = '';
+  scored.forEach((m, idx)=>{
+    const achCount = getAchievements().filter(a=>a.memberId===m.id).length;
+    const avgRat = achCount ? (m.score / Math.max(achCount,1)).toFixed(1) : '—';
+
+    // Category bars
+    const catKeys = Object.keys(m.cats);
+    const maxCat = Math.max(...Object.values(m.cats), 1);
+    let catBars = '';
+    if(catKeys.length){
+      catKeys.sort((a,b)=>m.cats[b]-m.cats[a]).slice(0,5).forEach(cat=>{
+        const pct = Math.round((m.cats[cat]/maxCat)*100);
+        catBars += `<div class="bar-row">
+          <span class="bar-name">${cat}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"><span class="bar-val">${m.cats[cat].toFixed(1)}</span></div></div>
+        </div>`;
+      });
+    } else {
+      catBars = '<div style="font-size:0.78rem;color:var(--text-dim);padding:4px 0">No deeds posted yet.</div>';
+    }
+
+    const rankIcon = idx===0?'🏆':idx===1?'🥈':idx===2?'🥉':`<span style="font-family:Cinzel,serif;color:var(--text-dim)">${idx+1}</span>`;
+
+    const card = document.createElement('div');
+    card.className = 'member-card';
+    card.style.marginBottom = '1rem';
+    card.innerHTML = `
+      <div class="member-header">
+        <div style="font-size:1.5rem;width:32px;text-align:center;flex-shrink:0">${rankIcon}</div>
+        <div class="member-ava">${initials(m.name)}</div>
+        <div class="member-info">
+          <div class="member-name">${m.name}</div>
+          <div class="member-phone">${achCount} deed${achCount!==1?'s':''} · Avg ${avgRat}</div>
+        </div>
+        <div>
+          <div class="member-total">${m.score.toFixed(1)}</div>
+          <div class="member-total-lbl">Total Score</div>
+        </div>
+      </div>
+      <div class="chart-section">
+        <div class="chart-label">Score by Category</div>
+        <div class="bars">${catBars}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════════════
+function buildFilterDropdowns(){
+  const members = getMembers().filter(m=>!m.isAdmin);
+  const sel = document.getElementById('filter-member');
+  sel.innerHTML = '<option value="">All Members</option>';
+  members.forEach(m=>{
+    const o = document.createElement('option');
+    o.value = m.id; o.textContent = m.name;
+    sel.appendChild(o);
+  });
+}
+
+function renderAchievements(){
+  const user = currentUser();
+  const catFilter = document.getElementById('filter-cat').value;
+  const memberFilter = document.getElementById('filter-member').value;
+  let achs = getAchievements();
+  if(catFilter) achs = achs.filter(a=>a.category===catFilter);
+  if(memberFilter) achs = achs.filter(a=>a.memberId===memberFilter);
+  achs.sort((a,b)=>b.createdAt-a.createdAt);
+
+  const container = document.getElementById('achievements-list');
+  if(!achs.length){
+    container.innerHTML = '<div class="empty-state"><span class="empty-icon">🏆</span>No deeds posted yet. Be the first!</div>';
+    return;
+  }
+
+  const members = getMembers();
+  const ratings = getRatings();
+  container.innerHTML = '';
+
+  achs.forEach(a=>{
+    const owner = members.find(m=>m.id===a.memberId);
+    if(!owner) return;
+    const avg = avgRatingForAch(a.id);
+    const voteCount = ratings.filter(r=>r.achId===a.id).length;
+    const myRating = ratings.find(r=>r.achId===a.id && r.raterId===user.id);
+    const isOwner = a.memberId===user.id;
+    const canRate = !isOwner && !myRating;
+    const date = new Date(a.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+    const card = document.createElement('div');
+    card.className = 'ach-card';
+    card.innerHTML = `
+      <div class="ach-header">
+        <div class="ach-top">
+          <div>
+            <div class="ach-title">${escHtml(a.title)}</div>
+            <div class="ach-owner">by <span>${owner.name}</span></div>
+          </div>
+          <span class="ach-cat">${a.category}</span>
+        </div>
+        <div class="ach-desc">${escHtml(a.description)}</div>
+        <div class="ach-meta">Posted ${date}</div>
+      </div>
+      <div class="ach-scores">
+        <div class="ach-score-item">
+          <div class="ach-score-val">${a.selfRating||'—'}</div>
+          <div class="ach-score-lbl">Self Rating</div>
+        </div>
+        <div class="ach-score-item">
+          <div class="ach-score-val">${avg||'—'}</div>
+          <div class="ach-score-lbl">Sabha Avg</div>
+        </div>
+        <div class="ach-score-item">
+          <div class="ach-score-val">${voteCount}</div>
+          <div class="ach-score-lbl">Votes</div>
+        </div>
+        ${canRate ? `<button class="ach-rate-btn" onclick="openRateModal('${a.id}')">Rate This Deed</button>` : ''}
+        ${myRating ? `<button class="ach-rate-btn rated">You Rated: ${myRating.rating}/10</button>` : ''}
+        ${isOwner ? `<button class="btn-danger" style="margin-left:auto" onclick="deleteAch('${a.id}')">Delete</button>` : ''}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function openAddAchModal(){
+  buildSelfStars();
+  document.getElementById('ach-title').value='';
+  document.getElementById('ach-desc').value='';
+  document.getElementById('ach-self-rating').value='0';
+  document.getElementById('ach-msg').style.display='none';
+  document.querySelectorAll('#self-stars .star').forEach(s=>s.classList.remove('active'));
+  document.getElementById('add-ach-modal').classList.add('open');
+}
+
+function buildSelfStars(){
+  const wrap = document.getElementById('self-stars');
+  wrap.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const s = document.createElement('span');
+    s.className='star'; s.textContent='★'; s.dataset.val=i;
+    s.onclick=()=>{
+      document.getElementById('ach-self-rating').value=i;
+      wrap.querySelectorAll('.star').forEach(st=>st.classList.toggle('active',st.dataset.val<=i));
+    };
+    wrap.appendChild(s);
+  }
+  const lbl = document.createElement('span');
+  lbl.className='rating-label'; lbl.id='self-rating-lbl'; lbl.textContent='';
+  wrap.appendChild(lbl);
+}
+
+function submitAchievement(){
+  const user = currentUser();
+  const title = document.getElementById('ach-title').value.trim();
+  const desc = document.getElementById('ach-desc').value.trim();
+  const cat = document.getElementById('ach-cat').value;
+  const selfRating = parseInt(document.getElementById('ach-self-rating').value)||0;
+  const msg = document.getElementById('ach-msg');
+  if(!title){ msg.textContent='Title is required.'; msg.style.display='block'; return; }
+  const ach = { id: uid(), memberId: user.id, title, description: desc, category: cat, selfRating, createdAt: Date.now() };
+  const achs = getAchievements();
+  achs.push(ach);
+  DB.set('achievements', achs);
+  closeModal('add-ach-modal');
+  buildFilterDropdowns();
+  renderAchievements();
+  renderHome();
+}
+
+function deleteAch(id){
+  if(!confirm('Delete this deed?')) return;
+  DB.set('achievements', getAchievements().filter(a=>a.id!==id));
+  DB.set('ratings', getRatings().filter(r=>r.achId!==id));
+  renderAchievements();
+  renderProfile();
+  renderHome();
+}
+
+// ══════════════════════════════════════════
+// RATING
+// ══════════════════════════════════════════
+let ratingTargetId = null;
+function openRateModal(achId){
+  ratingTargetId = achId;
+  const ach = getAchievements().find(a=>a.id===achId);
+  const owner = getMembers().find(m=>m.id===ach.memberId);
+  document.getElementById('rate-ach-info').innerHTML = `
+    <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:4px">${escHtml(ach.title)}</div>
+    <div style="font-size:0.78rem;color:var(--text-dim)">by ${owner?owner.name:'Unknown'} · ${ach.category}</div>
+  `;
+  buildRateStars();
+  document.getElementById('rate-value').value='0';
+  document.getElementById('rate-msg').style.display='none';
+  document.getElementById('rate-modal').classList.add('open');
+}
+
+function buildRateStars(){
+  const wrap = document.getElementById('rate-stars');
+  wrap.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const s = document.createElement('span');
+    s.className='star'; s.textContent='★'; s.dataset.val=i;
+    s.onclick=()=>{
+      document.getElementById('rate-value').value=i;
+      wrap.querySelectorAll('.star').forEach(st=>st.classList.toggle('active',st.dataset.val<=i));
+    };
+    wrap.appendChild(s);
+  }
+}
+
+function submitRating(){
+  const user = currentUser();
+  const rating = parseInt(document.getElementById('rate-value').value)||0;
+  const msg = document.getElementById('rate-msg');
+  if(!rating){ msg.textContent='Please select a rating.'; msg.style.color='var(--red)'; msg.style.display='block'; return; }
+  const rats = getRatings();
+  rats.push({ id: uid(), achId: ratingTargetId, raterId: user.id, rating, createdAt: Date.now() });
+  DB.set('ratings', rats);
+  msg.textContent='Rating submitted!'; msg.style.color='var(--green)'; msg.style.display='block';
+  setTimeout(()=>{ closeModal('rate-modal'); renderAchievements(); renderHome(); }, 800);
+}
+
+// ══════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════
+function renderProfile(){
+  const user = currentUser();
+  if(!user) return;
+  document.getElementById('profile-ava-text').textContent = initials(user.name);
+  document.getElementById('profile-name-text').textContent = user.name;
+  document.getElementById('profile-phone-text').textContent = user.phone;
+  const myAchs = getAchievements().filter(a=>a.memberId===user.id);
+  const ratings = getRatings();
+  const totalScore = memberScore(user.id);
+  const votesGiven = ratings.filter(r=>r.raterId===user.id).length;
+  const avgScore = myAchs.length ? (totalScore/myAchs.length).toFixed(1) : 0;
+  document.getElementById('profile-deeds-count').textContent = myAchs.length;
+  document.getElementById('profile-avg-score').textContent = avgScore;
+  document.getElementById('profile-total-pts').textContent = totalScore.toFixed(1);
+  document.getElementById('profile-votes-given').textContent = votesGiven;
+
+  // Category bars
+  const cats = memberScoreByCategory(user.id);
+  const catWrap = document.getElementById('profile-cats');
+  if(!Object.keys(cats).length){ catWrap.innerHTML='<div style="font-size:0.8rem;color:var(--text-dim)">Post deeds to see your stats.</div>'; }
+  else{
+    const maxC = Math.max(...Object.values(cats));
+    catWrap.innerHTML = Object.keys(cats).sort((a,b)=>cats[b]-cats[a]).map(c=>`
+      <div class="prog-row">
+        <span class="prog-name">${c}</span>
+        <div class="prog-track"><div class="prog-fill" style="width:${Math.round((cats[c]/maxC)*100)}%"></div></div>
+        <span class="prog-val">${cats[c].toFixed(1)}</span>
+      </div>`).join('');
+  }
+
+  // My deeds
+  const container = document.getElementById('my-achievements-list');
+  if(!myAchs.length){ container.innerHTML='<div class="empty-state"><span class="empty-icon">🏆</span>No deeds yet. Post your first!</div>'; return; }
+  myAchs.sort((a,b)=>b.createdAt-a.createdAt);
+  container.innerHTML = myAchs.map(a=>{
+    const avg = avgRatingForAch(a.id);
+    const voteCount = ratings.filter(r=>r.achId===a.id).length;
+    const date = new Date(a.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return `<div class="ach-card" style="margin-bottom:0.75rem">
+      <div class="ach-header">
+        <div class="ach-top">
+          <div><div class="ach-title">${escHtml(a.title)}</div><div class="ach-meta">${date} · ${a.category}</div></div>
+          <span class="ach-cat">${a.category}</span>
+        </div>
+        <div class="ach-desc">${escHtml(a.description)}</div>
+      </div>
+      <div class="ach-scores">
+        <div class="ach-score-item"><div class="ach-score-val">${a.selfRating||'—'}</div><div class="ach-score-lbl">Self</div></div>
+        <div class="ach-score-item"><div class="ach-score-val">${avg||'—'}</div><div class="ach-score-lbl">Sabha Avg</div></div>
+        <div class="ach-score-item"><div class="ach-score-val">${voteCount}</div><div class="ach-score-lbl">Votes</div></div>
+        <button class="btn-danger" style="margin-left:auto" onclick="deleteAch('${a.id}');renderProfile()">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════
+function renderAdmin(){
+  const members = getMembers();
+  const container = document.getElementById('admin-members-list');
+  if(!members.length){ container.innerHTML='<div style="font-size:0.82rem;color:var(--text-dim)">No members yet.</div>'; return; }
+  container.innerHTML = members.map(m=>`
+    <div class="member-row">
+      <div>
+        <div class="member-row-name">${escHtml(m.name)} ${m.isAdmin?'<span class="badge-admin">Admin</span>':''}</div>
+        <div class="member-row-phone">${m.phone}</div>
+      </div>
+      ${!m.isAdmin?`<button class="btn-danger" onclick="adminRemoveMember('${m.id}')">Remove</button>`:'<span style="font-size:0.72rem;color:var(--text-dim)">Protected</span>'}
+    </div>`).join('');
+}
+
+function adminAddMember(){
+  const name = document.getElementById('admin-name').value.trim();
+  const phone = document.getElementById('admin-phone').value.trim().replace(/\D/g,'');
+  const pass = document.getElementById('admin-pass').value;
+  const isAdmin = document.getElementById('admin-is-admin').checked;
+  const msg = document.getElementById('admin-member-msg');
+  if(!name||!phone||!pass){ msg.textContent='All fields required.'; msg.style.color='var(--red)'; msg.style.display='block'; return; }
+  const members = getMembers();
+  if(members.find(m=>m.phone.replace(/\D/g,'')=== phone)){ msg.textContent='Phone already registered.'; msg.style.color='var(--red)'; msg.style.display='block'; return; }
+  members.push({ id: uid(), name, phone, password: pass, isAdmin, joinedAt: Date.now() });
+  DB.set('members', members);
+  document.getElementById('admin-name').value='';
+  document.getElementById('admin-phone').value='';
+  document.getElementById('admin-pass').value='';
+  document.getElementById('admin-is-admin').checked=false;
+  msg.textContent='Member added!'; msg.style.color='var(--green)'; msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',2500);
+  renderAdmin();
+  buildFilterDropdowns();
+  renderHome();
+}
+
+function adminRemoveMember(id){
+  if(!confirm('Remove this member? Their deeds will also be deleted.')) return;
+  DB.set('members', getMembers().filter(m=>m.id!==id));
+  DB.set('achievements', getAchievements().filter(a=>a.memberId!==id));
+  DB.set('ratings', getRatings().filter(r=>r.raterId!==id));
+  renderAdmin();
+  buildFilterDropdowns();
+  renderHome();
+}
+
+// ══════════════════════════════════════════
+// MODAL HELPERS
+// ══════════════════════════════════════════
+function closeModal(id){ document.getElementById(id).classList.remove('open') }
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); });
+});
+
+function escHtml(str){
+  if(!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════
+DB.init();
+const sess = currentUser();
+if(sess){
+  // Re-hydrate session from members list (in case data changed)
+  const fresh = getMembers().find(m=>m.id===sess.id);
+  if(fresh){ DB.set('session',fresh); startApp(); }
+  else{ DB.set('session',null); }
+}
+</script>
+</body>
+</html>
