@@ -18,205 +18,196 @@
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A84C' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
 
-/* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(10,10,8,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-gold);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;gap:8px}
-.nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
-.nav-title{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--gold);letter-spacing:0.12em;white-space:nowrap}
-.nav-tabs{display:flex;gap:2px}
-.nav-tab{font-size:0.75rem;font-weight:500;letter-spacing:0.05em;color:var(--text-muted);padding:6px 12px;border-radius:6px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;border:none;background:none;font-family:'DM Sans',sans-serif;white-space:nowrap}
+/* LOADING */
+#loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:1rem}
+#loading-screen .keg{font-size:3rem;animation:kegFloat 1.5s ease-in-out infinite}
+#loading-screen p{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.3em;color:var(--gold-dark);text-transform:uppercase}
+@keyframes kegFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.spin{display:inline-block;width:20px;height:20px;border:2px solid var(--border-gold);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,8,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-gold);padding:0 1.2rem;display:flex;align-items:center;justify-content:space-between;height:58px;gap:8px}
+.nav-brand{display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0}
+.nav-title{font-family:'Cinzel',serif;font-size:0.95rem;font-weight:700;color:var(--gold);letter-spacing:0.1em;white-space:nowrap}
+.nav-tabs{display:flex;gap:2px;flex-wrap:nowrap}
+.nav-tab{font-size:0.72rem;font-weight:500;letter-spacing:0.04em;color:var(--text-muted);padding:5px 10px;border-radius:6px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;border:none;background:none;font-family:'DM Sans',sans-serif;white-space:nowrap}
 .nav-tab:hover{color:var(--text);background:rgba(201,168,76,0.08)}
 .nav-tab.active{color:var(--gold);background:rgba(201,168,76,0.12)}
-.nav-right{display:flex;align-items:center;gap:10px}
-.nav-user{font-size:0.75rem;color:var(--text-muted)}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-user{font-size:0.72rem;color:var(--text-muted);white-space:nowrap}
 .nav-user span{color:var(--gold)}
-.btn-logout{font-size:0.72rem;padding:5px 12px;border:1px solid var(--border);background:none;color:var(--text-muted);border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
-.btn-logout:hover{border-color:var(--red);color:var(--red)}
+.btn-sm{font-size:0.7rem;padding:5px 10px;border:1px solid var(--border);background:none;color:var(--text-muted);border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap}
+.btn-sm:hover{border-color:var(--red);color:var(--red)}
 
-/* MAIN */
-main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 1.5rem 4rem}
-.page{display:none}
-.page.active{display:block}
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 1.2rem 4rem}
+.page{display:none}.page.active{display:block}
 
 /* AUTH */
-.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
-.auth-box{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:16px;padding:2.5rem;width:100%;max-width:420px;position:relative;overflow:hidden}
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;z-index:1}
+.auth-box{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:16px;padding:2.2rem;width:100%;max-width:400px;position:relative;overflow:hidden}
 .auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.auth-keg{font-size:3rem;text-align:center;display:block;margin-bottom:1rem;animation:kegFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(201,168,76,0.3))}
-@keyframes kegFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.auth-title{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;color:var(--gold);text-align:center;letter-spacing:0.08em;margin-bottom:0.25rem}
-.auth-sub{font-size:0.8rem;color:var(--text-muted);text-align:center;font-style:italic;margin-bottom:2rem}
-.auth-tabs{display:flex;gap:4px;background:var(--bg);border-radius:8px;padding:3px;margin-bottom:1.5rem}
-.auth-tab{flex:1;padding:7px;border-radius:5px;border:none;background:none;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.2s;text-align:center}
+.auth-keg{font-size:2.8rem;text-align:center;display:block;margin-bottom:0.8rem;animation:kegFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(201,168,76,0.3))}
+.auth-title{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;color:var(--gold);text-align:center;letter-spacing:0.08em;margin-bottom:0.2rem}
+.auth-sub{font-size:0.78rem;color:var(--text-muted);text-align:center;font-style:italic;margin-bottom:1.8rem}
+.auth-tabs{display:flex;gap:4px;background:var(--bg);border-radius:8px;padding:3px;margin-bottom:1.25rem}
+.auth-tab{flex:1;padding:7px;border-radius:5px;border:none;background:none;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;text-align:center}
 .auth-tab.active{background:var(--bg-card2);color:var(--gold);border:1px solid var(--border-gold)}
-.form-group{margin-bottom:1rem}
-.form-label{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:6px}
-.form-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;transition:border-color 0.2s;outline:none}
+.form-group{margin-bottom:0.9rem}
+.form-label{font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:5px}
+.form-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:9px 13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;transition:border-color 0.2s;outline:none}
 .form-input:focus{border-color:var(--border-gold)}
 .form-input::placeholder{color:var(--text-dim)}
-.btn-primary{width:100%;padding:11px;background:var(--gold);color:#0A0A08;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;margin-top:0.5rem}
+.btn-primary{width:100%;padding:11px;background:var(--gold);color:#0A0A08;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;margin-top:0.4rem;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-primary:hover{background:var(--gold-light)}
-.btn-primary:active{transform:scale(0.98)}
-.auth-err{font-size:0.78rem;color:var(--red);text-align:center;margin-top:0.75rem;min-height:20px}
-.auth-note{font-size:0.72rem;color:var(--text-dim);text-align:center;margin-top:1rem;line-height:1.5}
-.auth-note span{color:var(--gold-dark)}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed}
+.err-msg{font-size:0.76rem;color:var(--red);text-align:center;margin-top:0.6rem;min-height:18px}
 
-/* HOMEPAGE */
-.hero{text-align:center;padding:3rem 0 2rem}
-.hero-overline{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.4em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:1.25rem}
-.hero-keg{font-size:64px;display:block;margin:0 auto 1rem;animation:kegFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 25px rgba(201,168,76,0.35))}
-.hero-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:var(--gold);letter-spacing:0.08em;line-height:1.1;margin-bottom:0.5rem}
-.hero-tag{font-size:0.9rem;color:var(--text-muted);font-style:italic;margin-bottom:2rem}
-.divider{display:flex;align-items:center;gap:12px;margin:0 auto 2rem;max-width:250px}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark))}
+/* HERO */
+.hero{text-align:center;padding:2.5rem 0 1.5rem}
+.hero-overline{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.4em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:1rem}
+.hero-keg{font-size:56px;display:block;margin:0 auto 0.8rem;animation:kegFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 22px rgba(201,168,76,0.35))}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--gold);letter-spacing:0.08em;line-height:1.1;margin-bottom:0.4rem}
+.hero-tag{font-size:0.88rem;color:var(--text-muted);font-style:italic;margin-bottom:1.5rem}
+.divider{display:flex;align-items:center;gap:10px;margin:0 auto 1.5rem;max-width:200px}
+.divider::before,.divider::after{content:'';flex:1;height:1px}
+.divider::before{background:linear-gradient(90deg,transparent,var(--gold-dark))}
 .divider::after{background:linear-gradient(90deg,var(--gold-dark),transparent)}
-.divider-icon{font-size:11px;color:var(--gold)}
 
-/* MEMBERS GRID */
-.members-section{margin-top:1rem}
-.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
-.section-title{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dark)}
+/* SECTION */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.section-title{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dark)}
 .section-title::before{content:'▸ ';color:var(--gold)}
-.empty-state{text-align:center;padding:4rem 2rem;color:var(--text-dim);font-size:0.9rem;background:var(--bg-card);border:1px dashed var(--border);border-radius:12px}
-.empty-state .empty-icon{font-size:2.5rem;display:block;margin-bottom:1rem;opacity:0.4}
-.members-list{display:flex;flex-direction:column;gap:1.5rem}
 
-/* MEMBER CARD */
-.member-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 0.2s}
+/* MEMBER RANK CARD */
+.member-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1rem;transition:border-color 0.2s}
 .member-card:hover{border-color:var(--border-gold)}
-.member-header{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.25rem 1rem}
-.member-ava{width:48px;height:48px;border-radius:50%;background:var(--bg-card2);border:2px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;font-family:'Cinzel',serif;font-weight:700;color:var(--gold)}
-.member-info{flex:1}
-.member-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--text)}
-.member-phone{font-size:0.75rem;color:var(--text-dim);margin-top:2px}
-.member-total{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);text-align:right}
-.member-total-lbl{font-size:0.62rem;color:var(--text-dim);letter-spacing:0.1em;text-align:right}
+.member-header{display:flex;align-items:center;gap:0.9rem;padding:1rem 1.1rem 0.8rem}
+.rank-icon{font-size:1.3rem;width:28px;text-align:center;flex-shrink:0}
+.member-ava{width:44px;height:44px;border-radius:50%;background:var(--bg-card2);border:2px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;color:var(--gold);flex-shrink:0}
+.member-info{flex:1;min-width:0}
+.member-name{font-family:'Cinzel',serif;font-size:0.95rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.member-sub{font-size:0.72rem;color:var(--text-dim);margin-top:2px}
+.member-score-wrap{text-align:right;flex-shrink:0}
+.member-score{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)}
+.member-score-lbl{font-size:0.6rem;color:var(--text-dim);letter-spacing:0.1em}
+.chart-area{padding:0 1.1rem 1rem}
+.chart-lbl{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.bar-cat{font-size:0.72rem;color:var(--text-muted);width:85px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:16px;background:var(--bg);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--bronze),var(--gold));display:flex;align-items:center;justify-content:flex-end;padding-right:5px;min-width:28px;transition:width 1s ease}
+.bar-val{font-size:0.62rem;font-family:'Cinzel',serif;color:#0A0A08;font-weight:700}
+.no-deeds{font-size:0.76rem;color:var(--text-dim);padding:4px 0}
 
-/* CHART BARS */
-.chart-section{padding:0 1.25rem 1.25rem}
-.chart-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
-.bars{display:flex;flex-direction:column;gap:6px}
-.bar-row{display:flex;align-items:center;gap:8px}
-.bar-name{font-size:0.75rem;color:var(--text-muted);width:90px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bar-track{flex:1;height:18px;background:var(--bg);border-radius:4px;overflow:hidden;position:relative}
-.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--bronze),var(--gold));transition:width 0.8s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;min-width:24px}
-.bar-val{font-size:0.65rem;font-family:'Cinzel',serif;color:#0A0A08;font-weight:700}
-.bar-empty{font-size:0.65rem;color:var(--text-dim);padding-left:8px}
-.bar-self{background:linear-gradient(90deg,#4A6A4A,#7AC47A)}
-.bar-avg{background:linear-gradient(90deg,var(--bronze),var(--gold))}
+/* EMPTY */
+.empty{text-align:center;padding:3.5rem 2rem;color:var(--text-dim);background:var(--bg-card);border:1px dashed var(--border);border-radius:12px}
+.empty-icon{font-size:2.2rem;display:block;margin-bottom:0.8rem;opacity:0.35}
 
-/* ACHIEVEMENTS PAGE */
-.page-title-sec{padding:2rem 0 0}
-.page-title{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:700;color:var(--gold);letter-spacing:0.06em}
-.page-sub{font-size:0.85rem;color:var(--text-muted);margin-top:5px}
-
-.btn-gold{padding:8px 18px;background:var(--gold);color:#0A0A08;border:none;border-radius:7px;font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s}
+/* ACHIEVEMENTS */
+.page-title-sec{padding:1.8rem 0 0}
+.page-title{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:var(--gold);letter-spacing:0.06em}
+.page-sub{font-size:0.82rem;color:var(--text-muted);margin-top:4px}
+.btn-gold{padding:8px 16px;background:var(--gold);color:#0A0A08;border:none;border-radius:7px;font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;white-space:nowrap}
 .btn-gold:hover{background:var(--gold-light)}
-.btn-outline{padding:7px 16px;background:none;color:var(--text-muted);border:1px solid var(--border);border-radius:7px;font-size:0.78rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.btn-outline{padding:7px 14px;background:none;color:var(--text-muted);border:1px solid var(--border);border-radius:7px;font-size:0.76rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
 .btn-outline:hover{border-color:var(--border-gold);color:var(--gold)}
-.btn-danger{padding:5px 12px;background:none;color:var(--red);border:1px solid rgba(204,68,68,0.3);border-radius:6px;font-size:0.72rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.btn-danger{padding:5px 10px;background:none;color:var(--red);border:1px solid rgba(204,68,68,0.3);border-radius:5px;font-size:0.7rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
 .btn-danger:hover{background:rgba(204,68,68,0.1)}
-
-/* ACHIEVEMENT CARDS */
-.achievement-list{display:flex;flex-direction:column;gap:1rem;margin-top:1.25rem}
+.flex-gap{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ach-list{display:flex;flex-direction:column;gap:0.85rem;margin-top:1.1rem}
 .ach-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color 0.2s}
 .ach-card:hover{border-color:var(--border-gold)}
-.ach-header{padding:1rem 1.25rem 0.75rem;border-bottom:1px solid var(--border)}
-.ach-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-.ach-title{font-size:0.95rem;font-weight:600;color:var(--text)}
-.ach-cat{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid var(--border-gold);color:var(--gold-dark);background:rgba(201,168,76,0.08);white-space:nowrap}
-.ach-desc{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
-.ach-meta{font-size:0.72rem;color:var(--text-dim);margin-top:5px}
-.ach-scores{padding:0.75rem 1.25rem;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap}
-.ach-score-item{text-align:center}
-.ach-score-val{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)}
-.ach-score-lbl{font-size:0.62rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
-.ach-rate-btn{margin-left:auto;padding:7px 16px;background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--border-gold);border-radius:6px;font-size:0.78rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
-.ach-rate-btn:hover{background:rgba(201,168,76,0.2)}
-.ach-rate-btn.rated{color:var(--green);border-color:rgba(90,154,90,0.4);background:rgba(90,154,90,0.08)}
-.ach-owner{font-size:0.75rem;color:var(--text-dim)}
-.ach-owner span{color:var(--gold-dark)}
+.ach-head{padding:0.9rem 1.1rem 0.7rem;border-bottom:1px solid var(--border)}
+.ach-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.ach-title-txt{font-size:0.92rem;font-weight:600;color:var(--text)}
+.ach-by{font-size:0.7rem;color:var(--text-dim);margin-top:2px}
+.ach-by span{color:var(--gold-dark)}
+.ach-cat-badge{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid var(--border-gold);color:var(--gold-dark);background:rgba(201,168,76,0.08);white-space:nowrap;flex-shrink:0}
+.ach-desc-txt{font-size:0.78rem;color:var(--text-muted);line-height:1.5}
+.ach-date{font-size:0.68rem;color:var(--text-dim);margin-top:4px}
+.ach-footer{padding:0.65rem 1.1rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.score-item{text-align:center}
+.score-val{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold)}
+.score-lbl{font-size:0.58rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
+.rate-btn{margin-left:auto;padding:6px 14px;background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--border-gold);border-radius:6px;font-size:0.75rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.rate-btn:hover{background:rgba(201,168,76,0.2)}
+.rate-btn.rated{color:var(--green);border-color:rgba(90,154,90,0.4);background:rgba(90,154,90,0.08);cursor:default}
 
 /* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
-.modal{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:14px;padding:2rem;width:100%;max-width:480px;position:relative;max-height:90vh;overflow-y:auto}
+.modal{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:14px;padding:1.8rem;width:100%;max-width:460px;position:relative;max-height:90vh;overflow-y:auto}
 .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:14px 14px 0 0}
-.modal-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:1.5rem;letter-spacing:0.08em}
-.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-dim);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px 8px}
+.modal-title{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold);margin-bottom:1.3rem;letter-spacing:0.08em}
+.modal-close{position:absolute;top:0.9rem;right:1rem;background:none;border:none;color:var(--text-dim);font-size:1.1rem;cursor:pointer;padding:4px 8px}
 .modal-close:hover{color:var(--text)}
-
-/* STAR RATING */
-.star-row{display:flex;gap:8px;align-items:center;margin-top:0.5rem}
-.star{font-size:1.5rem;cursor:pointer;transition:transform 0.1s;line-height:1;color:var(--text-dim)}
-.star:hover,.star.active{color:var(--gold);transform:scale(1.15)}
-.rating-label{font-size:0.8rem;color:var(--text-muted);margin-left:8px}
-
-/* ADMIN PAGE */
-.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
-@media(max-width:700px){.admin-grid{grid-template-columns:1fr}}
-.admin-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem}
-.admin-card h3{font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold-dark);letter-spacing:0.1em;margin-bottom:1rem}
-.member-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(42,42,38,0.4)}
-.member-row:last-child{border-bottom:none}
-.member-row-name{font-size:0.85rem;font-weight:500}
-.member-row-phone{font-size:0.72rem;color:var(--text-dim)}
-.badge-admin{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid var(--border-gold)}
-
-/* CATEGORIES */
-.cat-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:0.5rem}
-.cat-chip{font-size:0.72rem;padding:4px 10px;border-radius:4px;border:1px solid var(--border-gold);color:var(--gold-dark);background:rgba(201,168,76,0.08);cursor:pointer;transition:all 0.2s}
-.cat-chip.sel{background:rgba(201,168,76,0.2);color:var(--gold)}
-
-/* MISC */
-.flex-gap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 select.form-input{appearance:none;cursor:pointer}
-textarea.form-input{resize:vertical;min-height:80px}
-.msg-success{font-size:0.78rem;color:var(--green);margin-top:0.5rem}
-.msg-error{font-size:0.78rem;color:var(--red);margin-top:0.5rem}
+textarea.form-input{resize:vertical;min-height:75px}
 
-/* PROFILE PAGE */
-.profile-grid{display:grid;grid-template-columns:300px 1fr;gap:1.5rem;margin-top:1.5rem}
-@media(max-width:800px){.profile-grid{grid-template-columns:1fr}}
-.profile-card{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:12px;padding:1.5rem;text-align:center;position:relative;overflow:hidden}
+/* STARS */
+.star-row{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.star{font-size:1.4rem;cursor:pointer;transition:transform 0.1s;color:var(--text-dim);line-height:1;user-select:none}
+.star:hover,.star.on{color:var(--gold);transform:scale(1.1)}
+
+/* PROFILE */
+.profile-grid{display:grid;grid-template-columns:280px 1fr;gap:1.3rem;margin-top:1.3rem}
+@media(max-width:750px){.profile-grid{grid-template-columns:1fr}}
+.profile-card{background:var(--bg-card);border:1px solid var(--border-gold);border-radius:12px;padding:1.4rem;text-align:center;position:relative;overflow:hidden}
 .profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.profile-ava{width:72px;height:72px;border-radius:50%;background:var(--bg-card2);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1rem;font-family:'Cinzel',serif;font-weight:700;color:var(--gold)}
-.profile-name{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:4px}
-.profile-phone{font-size:0.78rem;color:var(--text-dim);margin-bottom:1rem}
-.profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:1rem}
-.pstat{background:var(--bg);border-radius:7px;padding:10px;text-align:center}
-.pstat-val{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold-dark)}
-.pstat-lbl{font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em}
+.profile-ava{width:66px;height:66px;border-radius:50%;background:var(--bg-card2);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 0.9rem;font-family:'Cinzel',serif;font-weight:700;color:var(--gold)}
+.profile-nm{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);margin-bottom:3px}
+.profile-ph{font-size:0.74rem;color:var(--text-dim);margin-bottom:1rem}
+.pstats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pstat{background:var(--bg);border-radius:7px;padding:9px;text-align:center}
+.pstat-val{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-dark)}
+.pstat-lbl{font-size:0.58rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em}
+.cat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin-top:0.9rem}
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.prog-nm{font-size:0.74rem;color:var(--text-muted);width:75px;flex-shrink:0}
+.prog-track{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--bronze),var(--gold))}
+.prog-val{font-size:0.7rem;color:var(--gold-dark);font-family:'Cinzel',serif;width:26px;text-align:right}
 
-/* PROGRESS */
-.progress-wrap{margin-top:1.25rem}
-.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.prog-name{font-size:0.78rem;color:var(--text-muted);width:80px;flex-shrink:0}
-.prog-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--bronze),var(--gold));transition:width 0.8s}
-.prog-val{font-size:0.72rem;color:var(--gold-dark);font-family:'Cinzel',serif;width:28px;text-align:right}
+/* ADMIN */
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.3rem}
+@media(max-width:680px){.admin-grid{grid-template-columns:1fr}}
+.admin-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
+.admin-card h3{font-family:'Cinzel',serif;font-size:0.8rem;color:var(--gold-dark);letter-spacing:0.12em;margin-bottom:1rem}
+.mem-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(42,42,38,0.4)}
+.mem-row:last-child{border-bottom:none}
+.mem-nm{font-size:0.82rem;font-weight:500}
+.mem-ph{font-size:0.7rem;color:var(--text-dim)}
+.badge-admin{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid var(--border-gold);margin-left:5px}
+.msg-ok{font-size:0.76rem;color:var(--green);margin-top:6px}
+.msg-err{font-size:0.76rem;color:var(--red);margin-top:6px}
 </style>
 </head>
 <body>
 
-<!-- NAV (hidden until logged in) -->
+<div id="loading-screen">
+  <span class="keg">🍺</span>
+  <p>Loading the Sabha...</p>
+  <div class="spin"></div>
+</div>
+
 <nav id="main-nav" style="display:none">
   <div class="nav-brand" onclick="showPage('home')">
-    <span style="font-size:20px">🍺</span>
+    <span style="font-size:18px">🍺</span>
     <span class="nav-title">THE KEG SABHA</span>
   </div>
-  <div class="nav-tabs" id="nav-tabs">
+  <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('home')">Home</button>
-    <button class="nav-tab" onclick="showPage('achievements')">Deeds</button>
+    <button class="nav-tab" onclick="showPage('deeds')">Deeds</button>
     <button class="nav-tab" onclick="showPage('profile')">My Profile</button>
-    <button class="nav-tab admin-only" onclick="showPage('admin')" style="display:none">Admin</button>
+    <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin')">Admin</button>
   </div>
   <div class="nav-right">
-    <span class="nav-user" id="nav-user-name"></span>
-    <button class="btn-logout" onclick="logout()">Sign Out</button>
+    <span class="nav-user" id="nav-user"></span>
+    <button class="btn-sm" onclick="logout()">Sign Out</button>
   </div>
 </nav>
 
-<!-- AUTH PAGE -->
+<!-- AUTH -->
 <div id="auth-page">
   <div class="auth-wrap">
     <div class="auth-box">
@@ -224,41 +215,21 @@ textarea.form-input{resize:vertical;min-height:80px}
       <h1 class="auth-title">THE KEG SABHA</h1>
       <p class="auth-sub">One Keg. One Sabha. One Champion.</p>
       <div class="auth-tabs">
-        <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
-        <button class="auth-tab" onclick="switchAuthTab('signup')">Join the Sabha</button>
+        <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('signup')">Join the Sabha</button>
       </div>
-
-      <!-- LOGIN -->
       <div id="login-form">
-        <div class="form-group">
-          <label class="form-label">Phone Number</label>
-          <input class="form-input" id="login-phone" type="tel" placeholder="+1 555 000 0000" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input class="form-input" id="login-pass" type="password" placeholder="••••••••" />
-        </div>
-        <button class="btn-primary" onclick="login()">Enter the Sabha</button>
-        <div class="auth-err" id="login-err"></div>
+        <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="l-phone" type="tel" placeholder="e.g. 5551234567" /></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="l-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()" /></div>
+        <button class="btn-primary" id="login-btn" onclick="login()">Enter the Sabha</button>
+        <div class="err-msg" id="login-err"></div>
       </div>
-
-      <!-- SIGNUP -->
       <div id="signup-form" style="display:none">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input class="form-input" id="signup-name" type="text" placeholder="Your name" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Phone Number</label>
-          <input class="form-input" id="signup-phone" type="tel" placeholder="+1 555 000 0000" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input class="form-input" id="signup-pass" type="password" placeholder="Create a password" />
-        </div>
-        <button class="btn-primary" onclick="signup()">Join the Sabha</button>
-        <div class="auth-err" id="signup-err"></div>
-        <p class="auth-note">By joining you agree to the sacred rules of the Sabha.<br><span>Brotherhood. Competition. Legacy.</span></p>
+        <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="s-name" type="text" placeholder="Your name" /></div>
+        <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="s-phone" type="tel" placeholder="e.g. 5551234567" /></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="s-pass" type="password" placeholder="Create a password (min 6 chars)" onkeydown="if(event.key==='Enter')signup()" /></div>
+        <button class="btn-primary" id="signup-btn" onclick="signup()">Join the Sabha</button>
+        <div class="err-msg" id="signup-err"></div>
       </div>
     </div>
   </div>
@@ -270,273 +241,241 @@ textarea.form-input{resize:vertical;min-height:80px}
   <!-- HOME -->
   <div class="page active" id="page-home">
     <div class="hero">
-      <div class="hero-overline" id="season-label">Season IV · 2025</div>
+      <div class="hero-overline">Season IV · 2025</div>
       <span class="hero-keg">🍺</span>
       <h1 class="hero-title">THE KEG SABHA</h1>
       <p class="hero-tag">One Keg. One Sabha. One Champion.</p>
-      <div class="divider"><span class="divider-icon">⚜</span></div>
+      <div class="divider"><span style="font-size:11px;color:var(--gold)">⚜</span></div>
     </div>
-    <div class="members-section">
-      <div class="section-hdr">
-        <span class="section-title">Brotherhood Rankings</span>
-        <span style="font-size:0.75rem;color:var(--text-dim)" id="member-count-label"></span>
-      </div>
-      <div id="members-list-home"></div>
+    <div class="section-hdr">
+      <span class="section-title">Brotherhood Rankings</span>
+      <span id="home-count" style="font-size:0.72rem;color:var(--text-dim)"></span>
     </div>
+    <div id="home-members"></div>
   </div>
 
-  <!-- ACHIEVEMENTS / DEEDS -->
-  <div class="page" id="page-achievements">
-    <div class="page-title-sec">
-      <h1 class="page-title">The Deed Hall</h1>
-      <p class="page-sub">Post your conquests. Let the Sabha judge.</p>
-    </div>
-    <div style="margin-top:1.25rem" class="flex-gap">
-      <button class="btn-gold" onclick="openAddAchModal()">+ Post a Deed</button>
-      <select class="form-input" id="filter-cat" onchange="renderAchievements()" style="width:auto;padding:7px 12px;font-size:0.8rem">
+  <!-- DEEDS -->
+  <div class="page" id="page-deeds">
+    <div class="page-title-sec"><h1 class="page-title">The Deed Hall</h1><p class="page-sub">Post your conquests. Let the Sabha judge.</p></div>
+    <div style="margin-top:1.1rem" class="flex-gap">
+      <button class="btn-gold" onclick="openAddModal()">+ Post a Deed</button>
+      <select class="form-input" id="f-cat" onchange="loadDeeds()" style="width:auto;padding:7px 11px;font-size:0.78rem">
         <option value="">All Categories</option>
         <option>Business</option><option>Career</option><option>Finance</option>
         <option>Fitness</option><option>Travel</option><option>Adventure</option>
-        <option>Education</option><option>Family</option><option>Community</option>
-        <option>Wild Card</option>
+        <option>Education</option><option>Family</option><option>Community</option><option>Wild Card</option>
       </select>
-      <select class="form-input" id="filter-member" onchange="renderAchievements()" style="width:auto;padding:7px 12px;font-size:0.8rem">
+      <select class="form-input" id="f-mem" onchange="loadDeeds()" style="width:auto;padding:7px 11px;font-size:0.78rem">
         <option value="">All Members</option>
       </select>
     </div>
-    <div class="achievement-list" id="achievements-list"></div>
+    <div class="ach-list" id="deeds-list"></div>
   </div>
 
   <!-- PROFILE -->
   <div class="page" id="page-profile">
-    <div class="page-title-sec">
-      <h1 class="page-title">My Profile</h1>
-      <p class="page-sub">Your legend, your stats, your deeds.</p>
-    </div>
+    <div class="page-title-sec"><h1 class="page-title">My Profile</h1><p class="page-sub">Your legend, your stats, your deeds.</p></div>
     <div class="profile-grid">
       <div>
         <div class="profile-card">
-          <div class="profile-ava" id="profile-ava-text">?</div>
-          <div class="profile-name" id="profile-name-text"></div>
-          <div class="profile-phone" id="profile-phone-text"></div>
-          <div class="profile-stats">
-            <div class="pstat"><div class="pstat-val" id="profile-deeds-count">0</div><div class="pstat-lbl">Deeds</div></div>
-            <div class="pstat"><div class="pstat-val" id="profile-avg-score">0</div><div class="pstat-lbl">Avg Score</div></div>
-            <div class="pstat"><div class="pstat-val" id="profile-total-pts">0</div><div class="pstat-lbl">Total Pts</div></div>
-            <div class="pstat"><div class="pstat-val" id="profile-votes-given">0</div><div class="pstat-lbl">Votes Given</div></div>
+          <div class="profile-ava" id="p-ava"></div>
+          <div class="profile-nm" id="p-name"></div>
+          <div class="profile-ph" id="p-phone"></div>
+          <div class="pstats">
+            <div class="pstat"><div class="pstat-val" id="p-deeds">0</div><div class="pstat-lbl">Deeds</div></div>
+            <div class="pstat"><div class="pstat-val" id="p-avg">—</div><div class="pstat-lbl">Avg Score</div></div>
+            <div class="pstat"><div class="pstat-val" id="p-total">0</div><div class="pstat-lbl">Total Pts</div></div>
+            <div class="pstat"><div class="pstat-val" id="p-votes">0</div><div class="pstat-lbl">Votes Given</div></div>
           </div>
         </div>
-        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-top:1rem">
-          <div class="section-hdr" style="margin-bottom:0.75rem"><span class="section-title">Score by Category</span></div>
-          <div class="progress-wrap" id="profile-cats"></div>
+        <div class="cat-card">
+          <div class="section-hdr" style="margin-bottom:0.7rem"><span class="section-title">By Category</span></div>
+          <div id="p-cats"></div>
         </div>
       </div>
       <div>
-        <div class="section-hdr"><span class="section-title">My Deeds</span><button class="btn-gold" style="font-size:0.7rem;padding:6px 14px" onclick="openAddAchModal()">+ Post Deed</button></div>
-        <div id="my-achievements-list"></div>
+        <div class="section-hdr"><span class="section-title">My Deeds</span><button class="btn-gold" style="font-size:0.68rem;padding:6px 12px" onclick="openAddModal()">+ Post Deed</button></div>
+        <div class="ach-list" id="my-deeds-list"></div>
       </div>
     </div>
   </div>
 
   <!-- ADMIN -->
   <div class="page" id="page-admin">
-    <div class="page-title-sec">
-      <h1 class="page-title">Admin Panel</h1>
-      <p class="page-sub">Manage the Brotherhood.</p>
-    </div>
+    <div class="page-title-sec"><h1 class="page-title">Admin Panel</h1><p class="page-sub">Manage the Brotherhood.</p></div>
     <div class="admin-grid">
       <div class="admin-card">
         <h3>▸ Add Member</h3>
-        <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="admin-name" placeholder="Member name" /></div>
-        <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="admin-phone" type="tel" placeholder="+1 555 000 0000" /></div>
-        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="admin-pass" type="password" placeholder="Temporary password" /></div>
-        <div class="form-group" style="display:flex;align-items:center;gap:8px">
-          <input type="checkbox" id="admin-is-admin" style="accent-color:var(--gold)">
-          <label for="admin-is-admin" style="font-size:0.82rem;color:var(--text-muted)">Grant admin rights</label>
-        </div>
+        <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="a-name" placeholder="Member name" /></div>
+        <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="a-phone" type="tel" placeholder="e.g. 5551234567" /></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="a-pass" type="password" placeholder="Temporary password" /></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="a-admin" style="accent-color:var(--gold)"><label for="a-admin" style="font-size:0.8rem;color:var(--text-muted)">Grant admin rights</label></div>
         <button class="btn-gold" onclick="adminAddMember()">Add Member</button>
-        <div id="admin-member-msg" class="msg-success" style="display:none"></div>
+        <div id="a-msg"></div>
       </div>
       <div class="admin-card">
-        <h3>▸ Manage Members</h3>
-        <div id="admin-members-list"></div>
+        <h3>▸ Current Members</h3>
+        <div id="admin-list"></div>
       </div>
     </div>
   </div>
 
 </main>
 
-<!-- ADD ACHIEVEMENT MODAL -->
-<div class="modal-overlay" id="add-ach-modal">
+<!-- ADD DEED MODAL -->
+<div class="modal-overlay" id="add-modal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('add-ach-modal')">✕</button>
+    <button class="modal-close" onclick="closeModal('add-modal')">✕</button>
     <div class="modal-title">Post a New Deed</div>
-    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ach-title" placeholder="What did you accomplish?" /></div>
-    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="ach-desc" placeholder="Tell the story..."></textarea></div>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="m-title" placeholder="What did you accomplish?" /></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="m-desc" placeholder="Tell the story..."></textarea></div>
     <div class="form-group">
       <label class="form-label">Category</label>
-      <select class="form-input" id="ach-cat">
+      <select class="form-input" id="m-cat">
         <option>Business</option><option>Career</option><option>Finance</option>
         <option>Fitness</option><option>Travel</option><option>Adventure</option>
-        <option>Education</option><option>Family</option><option>Community</option>
-        <option>Wild Card</option>
+        <option>Education</option><option>Family</option><option>Community</option><option>Wild Card</option>
       </select>
     </div>
     <div class="form-group">
-      <label class="form-label">Your Self-Rating (1–10)</label>
-      <div class="star-row" id="self-stars"></div>
-      <input type="hidden" id="ach-self-rating" value="0" />
+      <label class="form-label">Self-Rating (1–10)</label>
+      <div class="star-row" id="self-star-row"></div>
+      <input type="hidden" id="m-self" value="0" />
     </div>
-    <button class="btn-primary" onclick="submitAchievement()">Post to the Sabha</button>
-    <div id="ach-msg" class="msg-error" style="display:none"></div>
+    <button class="btn-primary" id="post-btn" onclick="submitDeed()">Post to the Sabha</button>
+    <div id="add-msg" class="msg-err" style="display:none;margin-top:6px"></div>
   </div>
 </div>
 
 <!-- RATE MODAL -->
 <div class="modal-overlay" id="rate-modal">
-  <div class="modal" style="max-width:380px">
+  <div class="modal" style="max-width:360px">
     <button class="modal-close" onclick="closeModal('rate-modal')">✕</button>
     <div class="modal-title">Rate This Deed</div>
-    <div id="rate-ach-info" style="margin-bottom:1.25rem"></div>
+    <div id="rate-info" style="margin-bottom:1.1rem;font-size:0.85rem;color:var(--text-muted)"></div>
     <div class="form-group">
       <label class="form-label">Your Rating (1–10)</label>
-      <div class="star-row" id="rate-stars"></div>
-      <input type="hidden" id="rate-value" value="0" />
+      <div class="star-row" id="rate-star-row"></div>
+      <input type="hidden" id="r-val" value="0" />
     </div>
-    <button class="btn-primary" onclick="submitRating()">Submit Rating</button>
-    <div id="rate-msg" class="msg-success" style="display:none"></div>
+    <button class="btn-primary" id="rate-btn" onclick="submitRating()">Submit Rating</button>
+    <div id="rate-msg" style="display:none;margin-top:6px;font-size:0.76rem"></div>
   </div>
 </div>
 
 <script>
 // ══════════════════════════════════════════
-// DATA LAYER — localStorage persistence
+// SUPABASE CONFIG
 // ══════════════════════════════════════════
-const DB = {
-  get(key){ try{ return JSON.parse(localStorage.getItem('ks_'+key)||'null') }catch(e){ return null } },
-  set(key,val){ localStorage.setItem('ks_'+key, JSON.stringify(val)) },
-  init(){
-    if(!this.get('members')){
-      // Create default admin
-      this.set('members',[{
-        id:'admin_001', name:'Admin', phone:'0000000000',
-        password:'admin123', isAdmin:true, joinedAt: Date.now()
-      }]);
-    }
-    if(!this.get('achievements')) this.set('achievements',[]);
-    if(!this.get('ratings')) this.set('ratings',[]);
-    if(!this.get('session')) this.set('session',null);
-  }
-};
+const SUPA_URL = 'https://zkjrgxgvqujqyqfnvyuc.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpranJneGd2cXVqcXlxZm52eXVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDc5MjksImV4cCI6MjA5NjA4MzkyOX0.ykWXs7A6EHEavIK0E8_8KiltpNuH0s_vajDgAbKy_Sw';
+
+const H = {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
+
+async function sb(method, table, body, params=''){
+  const url = SUPA_URL+'/rest/v1/'+table+(params?'?'+params:'');
+  const opts = {method, headers:{...H}};
+  if(body) opts.body = JSON.stringify(body);
+  if(method==='GET') opts.headers['Accept']='application/json';
+  if(method==='POST') opts.headers['Prefer']='return=representation';
+  if(method==='DELETE') opts.headers['Prefer']='return=representation';
+  const res = await fetch(url, opts);
+  const text = await res.text();
+  try{ return {ok: res.ok, status: res.status, data: text ? JSON.parse(text) : null}; }
+  catch(e){ return {ok: res.ok, status: res.status, data: text}; }
+}
 
 // ══════════════════════════════════════════
-// HELPERS
+// SESSION
 // ══════════════════════════════════════════
-function getMembers(){ return DB.get('members')||[] }
-function getAchievements(){ return DB.get('achievements')||[] }
-function getRatings(){ return DB.get('ratings')||[] }
-function currentUser(){ return DB.get('session') }
+let SESSION = null;
+function saveSession(u){ localStorage.setItem('ks_session', JSON.stringify(u)); SESSION = u; }
+function loadSession(){ try{ SESSION = JSON.parse(localStorage.getItem('ks_session')); }catch(e){ SESSION=null; } return SESSION; }
+function clearSession(){ localStorage.removeItem('ks_session'); SESSION=null; }
 
-function initials(name){
-  return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-}
+function initials(n){ return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+function esc(s){ if(!s)return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(d){ return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
 
-function avgRatingForAch(achId){
-  const rats = getRatings().filter(r=>r.achId===achId);
-  if(!rats.length) return null;
-  return (rats.reduce((s,r)=>s+r.rating,0)/rats.length).toFixed(1);
-}
+// ══════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', async ()=>{
+  loadSession();
+  if(SESSION){
+    // re-verify session member still exists
+    const r = await sb('GET','members','',`id=eq.${SESSION.id}&select=*`);
+    if(r.ok && r.data && r.data.length){
+      SESSION = r.data[0]; saveSession(SESSION);
+      hideLoading(); startApp();
+    } else { clearSession(); hideLoading(); showAuth(); }
+  } else { hideLoading(); showAuth(); }
+});
 
-function memberScore(memberId){
-  const myAchs = getAchievements().filter(a=>a.memberId===memberId);
-  let total = 0;
-  myAchs.forEach(a=>{
-    const avg = avgRatingForAch(a.id);
-    if(avg) total += parseFloat(avg);
-    else if(a.selfRating) total += a.selfRating;
-  });
-  return total;
-}
-
-function memberScoreByCategory(memberId){
-  const cats = {};
-  const myAchs = getAchievements().filter(a=>a.memberId===memberId);
-  myAchs.forEach(a=>{
-    const avg = avgRatingForAch(a.id);
-    const score = avg ? parseFloat(avg) : (a.selfRating||0);
-    cats[a.category] = (cats[a.category]||0) + score;
-  });
-  return cats;
-}
-
-function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7) }
+function hideLoading(){ document.getElementById('loading-screen').style.display='none'; }
+function showAuth(){ document.getElementById('auth-page').style.display='block'; document.getElementById('main-app').style.display='none'; document.getElementById('main-nav').style.display='none'; }
 
 // ══════════════════════════════════════════
 // AUTH
 // ══════════════════════════════════════════
-function switchAuthTab(tab){
-  document.querySelectorAll('.auth-tab').forEach((t,i)=>{
-    t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='signup'));
-  });
-  document.getElementById('login-form').style.display = tab==='login'?'block':'none';
-  document.getElementById('signup-form').style.display = tab==='signup'?'block':'none';
+function switchTab(t){
+  document.querySelectorAll('.auth-tab').forEach((el,i)=>el.classList.toggle('active',(t==='login'&&i===0)||(t==='signup'&&i===1)));
+  document.getElementById('login-form').style.display = t==='login'?'block':'none';
+  document.getElementById('signup-form').style.display = t==='signup'?'block':'none';
 }
 
-function login(){
-  const phone = document.getElementById('login-phone').value.trim().replace(/\D/g,'');
-  const pass = document.getElementById('login-pass').value;
+async function login(){
+  const phone = document.getElementById('l-phone').value.trim().replace(/\D/g,'');
+  const pass = document.getElementById('l-pass').value;
   const err = document.getElementById('login-err');
-  if(!phone||!pass){ err.textContent='Enter phone and password.'; return; }
-  const members = getMembers();
-  const member = members.find(m=>m.phone.replace(/\D/g,'')=== phone && m.password===pass);
-  if(!member){ err.textContent='Invalid credentials. Check your phone number and password.'; return; }
-  DB.set('session', member);
+  if(!phone||!pass){ err.textContent='Phone and password required.'; return; }
+  const btn = document.getElementById('login-btn');
+  btn.disabled=true; btn.innerHTML='<div class="spin"></div>';
+  const r = await sb('GET','members','',`phone=eq.${phone}&select=*`);
+  btn.disabled=false; btn.textContent='Enter the Sabha';
+  if(!r.ok||!r.data||!r.data.length){ err.textContent='No account found with that phone number.'; return; }
+  const member = r.data[0];
+  if(member.password !== pass){ err.textContent='Incorrect password.'; return; }
   err.textContent='';
+  saveSession(member);
   startApp();
 }
 
-function signup(){
-  const name = document.getElementById('signup-name').value.trim();
-  const phone = document.getElementById('signup-phone').value.trim().replace(/\D/g,'');
-  const pass = document.getElementById('signup-pass').value;
+async function signup(){
+  const name = document.getElementById('s-name').value.trim();
+  const phone = document.getElementById('s-phone').value.trim().replace(/\D/g,'');
+  const pass = document.getElementById('s-pass').value;
   const err = document.getElementById('signup-err');
-  if(!name||!phone||!pass){ err.textContent='All fields required.'; return; }
+  if(!name||!phone||!pass){ err.textContent='All fields are required.'; return; }
   if(pass.length<6){ err.textContent='Password must be at least 6 characters.'; return; }
-  const members = getMembers();
-  if(members.find(m=>m.phone.replace(/\D/g,'')=== phone)){ err.textContent='Phone number already registered.'; return; }
-  const newMember = { id: uid(), name, phone, password: pass, isAdmin: false, joinedAt: Date.now() };
-  members.push(newMember);
-  DB.set('members', members);
-  DB.set('session', newMember);
+  const btn = document.getElementById('signup-btn');
+  btn.disabled=true; btn.innerHTML='<div class="spin"></div>';
+  // Check if phone exists
+  const check = await sb('GET','members','',`phone=eq.${phone}&select=id`);
+  if(check.ok && check.data && check.data.length){ btn.disabled=false; btn.textContent='Join the Sabha'; err.textContent='Phone number already registered.'; return; }
+  const r = await sb('POST','members',{name, phone, password: pass, is_admin: false});
+  btn.disabled=false; btn.textContent='Join the Sabha';
+  if(!r.ok){ err.textContent='Signup failed. Please try again.'; console.error(r); return; }
+  const member = Array.isArray(r.data) ? r.data[0] : r.data;
+  saveSession(member);
   err.textContent='';
   startApp();
 }
 
-function logout(){
-  DB.set('session', null);
-  document.getElementById('main-nav').style.display='none';
-  document.getElementById('main-app').style.display='none';
-  document.getElementById('auth-page').style.display='block';
-  document.getElementById('login-phone').value='';
-  document.getElementById('login-pass').value='';
-  switchAuthTab('login');
-}
+function logout(){ clearSession(); location.reload(); }
 
 // ══════════════════════════════════════════
 // APP START
 // ══════════════════════════════════════════
 function startApp(){
-  const user = currentUser();
-  if(!user) return;
   document.getElementById('auth-page').style.display='none';
   document.getElementById('main-nav').style.display='flex';
   document.getElementById('main-app').style.display='block';
-  document.getElementById('nav-user-name').innerHTML = 'Welcome, <span>'+user.name+'</span>';
-  // Show admin tab
-  const adminTab = document.querySelector('.admin-only');
-  if(user.isAdmin) adminTab.style.display='inline-block';
-  else adminTab.style.display='none';
-  buildFilterDropdowns();
+  document.getElementById('nav-user').innerHTML='Hey, <span>'+esc(SESSION.name)+'</span>';
+  if(SESSION.is_admin) document.getElementById('admin-tab').style.display='inline-block';
+  buildStars('self-star-row','m-self');
+  buildStars('rate-star-row','r-val');
+  loadMemberFilter();
   showPage('home');
 }
 
@@ -546,394 +485,345 @@ function startApp(){
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  const pg = document.getElementById('page-'+id);
-  if(pg) pg.classList.add('active');
-  const tabMap={home:0,achievements:1,profile:2,admin:3};
-  const tabs = document.querySelectorAll('.nav-tab');
-  if(tabMap[id]!==undefined && tabs[tabMap[id]]) tabs[tabMap[id]].classList.add('active');
+  const p = document.getElementById('page-'+id); if(p) p.classList.add('active');
+  const map={home:0,deeds:1,profile:2,admin:3};
+  const tabs=document.querySelectorAll('.nav-tab');
+  if(map[id]!==undefined && tabs[map[id]]) tabs[map[id]].classList.add('active');
   window.scrollTo(0,0);
-  if(id==='home') renderHome();
-  if(id==='achievements') renderAchievements();
-  if(id==='profile') renderProfile();
-  if(id==='admin') renderAdmin();
+  if(id==='home') loadHome();
+  if(id==='deeds') loadDeeds();
+  if(id==='profile') loadProfile();
+  if(id==='admin') loadAdmin();
 }
 
 // ══════════════════════════════════════════
-// HOME — member ranking with bar charts
+// HOME
 // ══════════════════════════════════════════
-function renderHome(){
-  const members = getMembers().filter(m=>!m.isAdmin);
-  const container = document.getElementById('members-list-home');
-  document.getElementById('member-count-label').textContent = members.length+' members';
+async function loadHome(){
+  const container = document.getElementById('home-members');
+  container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-dim)"><div class="spin" style="margin:auto"></div></div>';
+
+  const [mRes, aRes, rRes] = await Promise.all([
+    sb('GET','members','','is_admin=eq.false&select=*&order=created_at.asc'),
+    sb('GET','achievements','','select=*'),
+    sb('GET','ratings','','select=*')
+  ]);
+
+  const members = (mRes.ok && mRes.data) ? mRes.data : [];
+  const achs = (aRes.ok && aRes.data) ? aRes.data : [];
+  const rats = (rRes.ok && rRes.data) ? rRes.data : [];
+
+  document.getElementById('home-count').textContent = members.length+' member'+(members.length!==1?'s':'');
 
   if(!members.length){
-    container.innerHTML = '<div class="empty-state"><span class="empty-icon">🍺</span>No members yet. Be the first to join the Sabha!</div>';
+    container.innerHTML='<div class="empty"><span class="empty-icon">🍺</span>No members yet. Be the first to join!</div>';
     return;
   }
 
-  // Sort by total score descending
-  const scored = members.map(m=>({ ...m, score: memberScore(m.id), cats: memberScoreByCategory(m.id) }));
-  scored.sort((a,b)=>b.score-a.score);
+  // Calculate scores
+  function avgFor(achId){
+    const r = rats.filter(x=>x.achievement_id===achId);
+    if(!r.length) return null;
+    return r.reduce((s,x)=>s+x.rating,0)/r.length;
+  }
+  function memberTotal(mid){
+    const ma = achs.filter(a=>a.member_id===mid);
+    let t=0;
+    ma.forEach(a=>{ const avg=avgFor(a.id); t+= avg!==null ? avg : (a.self_rating||0); });
+    return t;
+  }
+  function memberCats(mid){
+    const cats={};
+    achs.filter(a=>a.member_id===mid).forEach(a=>{
+      const avg=avgFor(a.id);
+      const sc = avg!==null ? avg : (a.self_rating||0);
+      cats[a.category]=(cats[a.category]||0)+sc;
+    });
+    return cats;
+  }
 
-  const maxScore = Math.max(...scored.map(s=>s.score), 1);
+  const scored = members.map(m=>({...m, total:memberTotal(m.id), cats:memberCats(m.id), deedCount:achs.filter(a=>a.member_id===m.id).length}));
+  scored.sort((a,b)=>b.total-a.total);
+  const maxTotal = Math.max(...scored.map(s=>s.total),1);
 
-  container.innerHTML = '';
-  scored.forEach((m, idx)=>{
-    const achCount = getAchievements().filter(a=>a.memberId===m.id).length;
-    const avgRat = achCount ? (m.score / Math.max(achCount,1)).toFixed(1) : '—';
-
-    // Category bars
-    const catKeys = Object.keys(m.cats);
-    const maxCat = Math.max(...Object.values(m.cats), 1);
-    let catBars = '';
-    if(catKeys.length){
-      catKeys.sort((a,b)=>m.cats[b]-m.cats[a]).slice(0,5).forEach(cat=>{
-        const pct = Math.round((m.cats[cat]/maxCat)*100);
-        catBars += `<div class="bar-row">
-          <span class="bar-name">${cat}</span>
-          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"><span class="bar-val">${m.cats[cat].toFixed(1)}</span></div></div>
-        </div>`;
-      });
-    } else {
-      catBars = '<div style="font-size:0.78rem;color:var(--text-dim);padding:4px 0">No deeds posted yet.</div>';
-    }
-
-    const rankIcon = idx===0?'🏆':idx===1?'🥈':idx===2?'🥉':`<span style="font-family:Cinzel,serif;color:var(--text-dim)">${idx+1}</span>`;
+  container.innerHTML='';
+  scored.forEach((m,i)=>{
+    const icon = i===0?'🏆':i===1?'🥈':i===2?'🥉':`<span style="font-family:Cinzel,serif;font-size:0.95rem;color:var(--text-dim)">${i+1}</span>`;
+    const catKeys = Object.keys(m.cats).sort((a,b)=>m.cats[b]-m.cats[a]).slice(0,5);
+    const maxCat = catKeys.length ? Math.max(...catKeys.map(c=>m.cats[c]),1) : 1;
+    const bars = catKeys.length
+      ? catKeys.map(c=>{
+          const pct=Math.round((m.cats[c]/maxCat)*100);
+          return `<div class="bar-row"><span class="bar-cat">${esc(c)}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%"><span class="bar-val">${m.cats[c].toFixed(1)}</span></div></div></div>`;
+        }).join('')
+      : '<div class="no-deeds">No deeds posted yet.</div>';
 
     const card = document.createElement('div');
-    card.className = 'member-card';
-    card.style.marginBottom = '1rem';
-    card.innerHTML = `
+    card.className='member-card';
+    card.innerHTML=`
       <div class="member-header">
-        <div style="font-size:1.5rem;width:32px;text-align:center;flex-shrink:0">${rankIcon}</div>
+        <div class="rank-icon">${icon}</div>
         <div class="member-ava">${initials(m.name)}</div>
         <div class="member-info">
-          <div class="member-name">${m.name}</div>
-          <div class="member-phone">${achCount} deed${achCount!==1?'s':''} · Avg ${avgRat}</div>
+          <div class="member-name">${esc(m.name)}</div>
+          <div class="member-sub">${m.deedCount} deed${m.deedCount!==1?'s':''}</div>
         </div>
-        <div>
-          <div class="member-total">${m.score.toFixed(1)}</div>
-          <div class="member-total-lbl">Total Score</div>
+        <div class="member-score-wrap">
+          <div class="member-score">${m.total.toFixed(1)}</div>
+          <div class="member-score-lbl">Total Score</div>
         </div>
       </div>
-      <div class="chart-section">
-        <div class="chart-label">Score by Category</div>
-        <div class="bars">${catBars}</div>
-      </div>
-    `;
+      <div class="chart-area">
+        <div class="chart-lbl">Score by Category</div>
+        <div>${bars}</div>
+      </div>`;
     container.appendChild(card);
   });
 }
 
 // ══════════════════════════════════════════
-// ACHIEVEMENTS
+// DEEDS
 // ══════════════════════════════════════════
-function buildFilterDropdowns(){
-  const members = getMembers().filter(m=>!m.isAdmin);
-  const sel = document.getElementById('filter-member');
-  sel.innerHTML = '<option value="">All Members</option>';
-  members.forEach(m=>{
-    const o = document.createElement('option');
-    o.value = m.id; o.textContent = m.name;
-    sel.appendChild(o);
-  });
+async function loadMemberFilter(){
+  const r = await sb('GET','members','','is_admin=eq.false&select=id,name&order=name.asc');
+  const sel = document.getElementById('f-mem');
+  sel.innerHTML='<option value="">All Members</option>';
+  if(r.ok && r.data) r.data.forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=m.name; sel.appendChild(o); });
 }
 
-function renderAchievements(){
-  const user = currentUser();
-  const catFilter = document.getElementById('filter-cat').value;
-  const memberFilter = document.getElementById('filter-member').value;
-  let achs = getAchievements();
-  if(catFilter) achs = achs.filter(a=>a.category===catFilter);
-  if(memberFilter) achs = achs.filter(a=>a.memberId===memberFilter);
-  achs.sort((a,b)=>b.createdAt-a.createdAt);
+async function loadDeeds(){
+  const container = document.getElementById('deeds-list');
+  container.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text-dim)"><div class="spin" style="margin:auto"></div></div>';
+  const cat = document.getElementById('f-cat').value;
+  const mem = document.getElementById('f-mem').value;
+  let params = 'select=*,members(name)&order=created_at.desc';
+  if(cat) params += '&category=eq.'+encodeURIComponent(cat);
+  if(mem) params += '&member_id=eq.'+mem;
+  const [aRes, rRes] = await Promise.all([
+    sb('GET','achievements','',params),
+    sb('GET','ratings','','select=*')
+  ]);
+  const achs = (aRes.ok && aRes.data) ? aRes.data : [];
+  const rats = (rRes.ok && rRes.data) ? rRes.data : [];
+  renderDeedList(container, achs, rats, false);
+}
 
-  const container = document.getElementById('achievements-list');
-  if(!achs.length){
-    container.innerHTML = '<div class="empty-state"><span class="empty-icon">🏆</span>No deeds posted yet. Be the first!</div>';
-    return;
-  }
-
-  const members = getMembers();
-  const ratings = getRatings();
-  container.innerHTML = '';
-
+function renderDeedList(container, achs, rats, isProfile){
+  if(!achs.length){ container.innerHTML='<div class="empty"><span class="empty-icon">🏆</span>No deeds yet. Be the first!</div>'; return; }
+  container.innerHTML='';
   achs.forEach(a=>{
-    const owner = members.find(m=>m.id===a.memberId);
-    if(!owner) return;
-    const avg = avgRatingForAch(a.id);
-    const voteCount = ratings.filter(r=>r.achId===a.id).length;
-    const myRating = ratings.find(r=>r.achId===a.id && r.raterId===user.id);
-    const isOwner = a.memberId===user.id;
-    const canRate = !isOwner && !myRating;
-    const date = new Date(a.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const myRat = rats.find(r=>r.achievement_id===a.id && r.rater_id===SESSION.id);
+    const allRats = rats.filter(r=>r.achievement_id===a.id);
+    const avg = allRats.length ? (allRats.reduce((s,r)=>s+r.rating,0)/allRats.length).toFixed(1) : null;
+    const isOwner = a.member_id===SESSION.id;
+    const canRate = !isOwner && !myRat;
+    const ownerName = a.members ? a.members.name : 'Unknown';
 
     const card = document.createElement('div');
-    card.className = 'ach-card';
-    card.innerHTML = `
-      <div class="ach-header">
+    card.className='ach-card';
+    card.innerHTML=`
+      <div class="ach-head">
         <div class="ach-top">
           <div>
-            <div class="ach-title">${escHtml(a.title)}</div>
-            <div class="ach-owner">by <span>${owner.name}</span></div>
+            <div class="ach-title-txt">${esc(a.title)}</div>
+            <div class="ach-by">by <span>${esc(ownerName)}</span></div>
           </div>
-          <span class="ach-cat">${a.category}</span>
+          <span class="ach-cat-badge">${esc(a.category)}</span>
         </div>
-        <div class="ach-desc">${escHtml(a.description)}</div>
-        <div class="ach-meta">Posted ${date}</div>
+        ${a.description?`<div class="ach-desc-txt">${esc(a.description)}</div>`:''}
+        <div class="ach-date">${fmtDate(a.created_at)}</div>
       </div>
-      <div class="ach-scores">
-        <div class="ach-score-item">
-          <div class="ach-score-val">${a.selfRating||'—'}</div>
-          <div class="ach-score-lbl">Self Rating</div>
-        </div>
-        <div class="ach-score-item">
-          <div class="ach-score-val">${avg||'—'}</div>
-          <div class="ach-score-lbl">Sabha Avg</div>
-        </div>
-        <div class="ach-score-item">
-          <div class="ach-score-val">${voteCount}</div>
-          <div class="ach-score-lbl">Votes</div>
-        </div>
-        ${canRate ? `<button class="ach-rate-btn" onclick="openRateModal('${a.id}')">Rate This Deed</button>` : ''}
-        ${myRating ? `<button class="ach-rate-btn rated">You Rated: ${myRating.rating}/10</button>` : ''}
-        ${isOwner ? `<button class="btn-danger" style="margin-left:auto" onclick="deleteAch('${a.id}')">Delete</button>` : ''}
-      </div>
-    `;
+      <div class="ach-footer">
+        <div class="score-item"><div class="score-val">${a.self_rating||'—'}</div><div class="score-lbl">Self</div></div>
+        <div class="score-item"><div class="score-val">${avg||'—'}</div><div class="score-lbl">Sabha Avg</div></div>
+        <div class="score-item"><div class="score-val">${allRats.length}</div><div class="score-lbl">Votes</div></div>
+        ${canRate?`<button class="rate-btn" onclick="openRateModal('${a.id}','${esc(a.title)}','${esc(ownerName)}','${esc(a.category)}')">Rate This Deed</button>`:''}
+        ${myRat?`<button class="rate-btn rated">You Rated: ${myRat.rating}/10</button>`:''}
+        ${isOwner?`<button class="btn-danger" style="margin-left:auto" onclick="deleteDeed('${a.id}')">Delete</button>`:''}
+      </div>`;
     container.appendChild(card);
   });
 }
 
-function openAddAchModal(){
-  buildSelfStars();
-  document.getElementById('ach-title').value='';
-  document.getElementById('ach-desc').value='';
-  document.getElementById('ach-self-rating').value='0';
-  document.getElementById('ach-msg').style.display='none';
-  document.querySelectorAll('#self-stars .star').forEach(s=>s.classList.remove('active'));
-  document.getElementById('add-ach-modal').classList.add('open');
+// ══════════════════════════════════════════
+// ADD DEED
+// ══════════════════════════════════════════
+function openAddModal(){
+  document.getElementById('m-title').value='';
+  document.getElementById('m-desc').value='';
+  document.getElementById('m-self').value='0';
+  document.getElementById('add-msg').style.display='none';
+  resetStars('self-star-row','m-self');
+  document.getElementById('add-modal').classList.add('open');
 }
 
-function buildSelfStars(){
-  const wrap = document.getElementById('self-stars');
-  wrap.innerHTML='';
-  for(let i=1;i<=10;i++){
-    const s = document.createElement('span');
-    s.className='star'; s.textContent='★'; s.dataset.val=i;
-    s.onclick=()=>{
-      document.getElementById('ach-self-rating').value=i;
-      wrap.querySelectorAll('.star').forEach(st=>st.classList.toggle('active',st.dataset.val<=i));
-    };
-    wrap.appendChild(s);
-  }
-  const lbl = document.createElement('span');
-  lbl.className='rating-label'; lbl.id='self-rating-lbl'; lbl.textContent='';
-  wrap.appendChild(lbl);
-}
-
-function submitAchievement(){
-  const user = currentUser();
-  const title = document.getElementById('ach-title').value.trim();
-  const desc = document.getElementById('ach-desc').value.trim();
-  const cat = document.getElementById('ach-cat').value;
-  const selfRating = parseInt(document.getElementById('ach-self-rating').value)||0;
-  const msg = document.getElementById('ach-msg');
+async function submitDeed(){
+  const title = document.getElementById('m-title').value.trim();
+  const desc = document.getElementById('m-desc').value.trim();
+  const cat = document.getElementById('m-cat').value;
+  const self = parseInt(document.getElementById('m-self').value)||null;
+  const msg = document.getElementById('add-msg');
   if(!title){ msg.textContent='Title is required.'; msg.style.display='block'; return; }
-  const ach = { id: uid(), memberId: user.id, title, description: desc, category: cat, selfRating, createdAt: Date.now() };
-  const achs = getAchievements();
-  achs.push(ach);
-  DB.set('achievements', achs);
-  closeModal('add-ach-modal');
-  buildFilterDropdowns();
-  renderAchievements();
-  renderHome();
+  const btn = document.getElementById('post-btn');
+  btn.disabled=true; btn.innerHTML='<div class="spin"></div> Posting...';
+  const r = await sb('POST','achievements',{member_id:SESSION.id, title, description:desc, category:cat, self_rating:self});
+  btn.disabled=false; btn.textContent='Post to the Sabha';
+  if(!r.ok){ msg.textContent='Failed to post. Try again.'; msg.style.display='block'; console.error(r); return; }
+  closeModal('add-modal');
+  loadDeeds(); loadHome(); loadProfile();
 }
 
-function deleteAch(id){
-  if(!confirm('Delete this deed?')) return;
-  DB.set('achievements', getAchievements().filter(a=>a.id!==id));
-  DB.set('ratings', getRatings().filter(r=>r.achId!==id));
-  renderAchievements();
-  renderProfile();
-  renderHome();
+async function deleteDeed(id){
+  if(!confirm('Delete this deed? Ratings will also be removed.')) return;
+  await sb('DELETE','ratings','','achievement_id=eq.'+id);
+  await sb('DELETE','achievements','','id=eq.'+id);
+  loadDeeds(); loadHome(); loadProfile();
 }
 
 // ══════════════════════════════════════════
 // RATING
 // ══════════════════════════════════════════
-let ratingTargetId = null;
-function openRateModal(achId){
-  ratingTargetId = achId;
-  const ach = getAchievements().find(a=>a.id===achId);
-  const owner = getMembers().find(m=>m.id===ach.memberId);
-  document.getElementById('rate-ach-info').innerHTML = `
-    <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:4px">${escHtml(ach.title)}</div>
-    <div style="font-size:0.78rem;color:var(--text-dim)">by ${owner?owner.name:'Unknown'} · ${ach.category}</div>
-  `;
-  buildRateStars();
-  document.getElementById('rate-value').value='0';
+let ratingTarget = null;
+function openRateModal(id, title, owner, cat){
+  ratingTarget = id;
+  document.getElementById('rate-info').innerHTML = `<strong style="color:var(--text)">${esc(title)}</strong><br><span style="font-size:0.72rem;color:var(--text-dim)">by ${esc(owner)} · ${esc(cat)}</span>`;
+  document.getElementById('r-val').value='0';
   document.getElementById('rate-msg').style.display='none';
+  resetStars('rate-star-row','r-val');
   document.getElementById('rate-modal').classList.add('open');
 }
 
-function buildRateStars(){
-  const wrap = document.getElementById('rate-stars');
-  wrap.innerHTML='';
-  for(let i=1;i<=10;i++){
-    const s = document.createElement('span');
-    s.className='star'; s.textContent='★'; s.dataset.val=i;
-    s.onclick=()=>{
-      document.getElementById('rate-value').value=i;
-      wrap.querySelectorAll('.star').forEach(st=>st.classList.toggle('active',st.dataset.val<=i));
-    };
-    wrap.appendChild(s);
-  }
-}
-
-function submitRating(){
-  const user = currentUser();
-  const rating = parseInt(document.getElementById('rate-value').value)||0;
+async function submitRating(){
+  const rating = parseInt(document.getElementById('r-val').value)||0;
   const msg = document.getElementById('rate-msg');
   if(!rating){ msg.textContent='Please select a rating.'; msg.style.color='var(--red)'; msg.style.display='block'; return; }
-  const rats = getRatings();
-  rats.push({ id: uid(), achId: ratingTargetId, raterId: user.id, rating, createdAt: Date.now() });
-  DB.set('ratings', rats);
+  const btn = document.getElementById('rate-btn');
+  btn.disabled=true; btn.innerHTML='<div class="spin"></div> Submitting...';
+  const r = await sb('POST','ratings',{achievement_id:ratingTarget, rater_id:SESSION.id, rating});
+  btn.disabled=false; btn.textContent='Submit Rating';
+  if(!r.ok){ msg.textContent='Failed to submit. You may have already rated this.'; msg.style.color='var(--red)'; msg.style.display='block'; return; }
   msg.textContent='Rating submitted!'; msg.style.color='var(--green)'; msg.style.display='block';
-  setTimeout(()=>{ closeModal('rate-modal'); renderAchievements(); renderHome(); }, 800);
+  setTimeout(()=>{ closeModal('rate-modal'); loadDeeds(); loadHome(); loadProfile(); },700);
 }
 
 // ══════════════════════════════════════════
 // PROFILE
 // ══════════════════════════════════════════
-function renderProfile(){
-  const user = currentUser();
-  if(!user) return;
-  document.getElementById('profile-ava-text').textContent = initials(user.name);
-  document.getElementById('profile-name-text').textContent = user.name;
-  document.getElementById('profile-phone-text').textContent = user.phone;
-  const myAchs = getAchievements().filter(a=>a.memberId===user.id);
-  const ratings = getRatings();
-  const totalScore = memberScore(user.id);
-  const votesGiven = ratings.filter(r=>r.raterId===user.id).length;
-  const avgScore = myAchs.length ? (totalScore/myAchs.length).toFixed(1) : 0;
-  document.getElementById('profile-deeds-count').textContent = myAchs.length;
-  document.getElementById('profile-avg-score').textContent = avgScore;
-  document.getElementById('profile-total-pts').textContent = totalScore.toFixed(1);
-  document.getElementById('profile-votes-given').textContent = votesGiven;
+async function loadProfile(){
+  if(!SESSION) return;
+  document.getElementById('p-ava').textContent=initials(SESSION.name);
+  document.getElementById('p-name').textContent=SESSION.name;
+  document.getElementById('p-phone').textContent=SESSION.phone;
 
-  // Category bars
-  const cats = memberScoreByCategory(user.id);
-  const catWrap = document.getElementById('profile-cats');
-  if(!Object.keys(cats).length){ catWrap.innerHTML='<div style="font-size:0.8rem;color:var(--text-dim)">Post deeds to see your stats.</div>'; }
+  const [aRes, rRes, myRatRes] = await Promise.all([
+    sb('GET','achievements','',`member_id=eq.${SESSION.id}&select=*,members(name)&order=created_at.desc`),
+    sb('GET','ratings','','select=*'),
+    sb('GET','ratings','',`rater_id=eq.${SESSION.id}&select=id`)
+  ]);
+
+  const myAchs = (aRes.ok && aRes.data) ? aRes.data : [];
+  const allRats = (rRes.ok && rRes.data) ? rRes.data : [];
+  const votesGiven = (myRatRes.ok && myRatRes.data) ? myRatRes.data.length : 0;
+
+  function achAvg(achId){ const r=allRats.filter(x=>x.achievement_id===achId); return r.length?(r.reduce((s,x)=>s+x.rating,0)/r.length):null; }
+  let total=0;
+  const cats={};
+  myAchs.forEach(a=>{
+    const avg=achAvg(a.id);
+    const sc = avg!==null?avg:(a.self_rating||0);
+    total+=sc;
+    cats[a.category]=(cats[a.category]||0)+sc;
+  });
+  const avg = myAchs.length?(total/myAchs.length).toFixed(1):'—';
+
+  document.getElementById('p-deeds').textContent=myAchs.length;
+  document.getElementById('p-avg').textContent=avg;
+  document.getElementById('p-total').textContent=total.toFixed(1);
+  document.getElementById('p-votes').textContent=votesGiven;
+
+  const catWrap=document.getElementById('p-cats');
+  if(!Object.keys(cats).length){ catWrap.innerHTML='<div style="font-size:0.78rem;color:var(--text-dim)">Post deeds to see category stats.</div>'; }
   else{
-    const maxC = Math.max(...Object.values(cats));
-    catWrap.innerHTML = Object.keys(cats).sort((a,b)=>cats[b]-cats[a]).map(c=>`
+    const maxC=Math.max(...Object.values(cats));
+    catWrap.innerHTML=Object.keys(cats).sort((a,b)=>cats[b]-cats[a]).map(c=>`
       <div class="prog-row">
-        <span class="prog-name">${c}</span>
+        <span class="prog-nm">${esc(c)}</span>
         <div class="prog-track"><div class="prog-fill" style="width:${Math.round((cats[c]/maxC)*100)}%"></div></div>
         <span class="prog-val">${cats[c].toFixed(1)}</span>
       </div>`).join('');
   }
 
-  // My deeds
-  const container = document.getElementById('my-achievements-list');
-  if(!myAchs.length){ container.innerHTML='<div class="empty-state"><span class="empty-icon">🏆</span>No deeds yet. Post your first!</div>'; return; }
-  myAchs.sort((a,b)=>b.createdAt-a.createdAt);
-  container.innerHTML = myAchs.map(a=>{
-    const avg = avgRatingForAch(a.id);
-    const voteCount = ratings.filter(r=>r.achId===a.id).length;
-    const date = new Date(a.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    return `<div class="ach-card" style="margin-bottom:0.75rem">
-      <div class="ach-header">
-        <div class="ach-top">
-          <div><div class="ach-title">${escHtml(a.title)}</div><div class="ach-meta">${date} · ${a.category}</div></div>
-          <span class="ach-cat">${a.category}</span>
-        </div>
-        <div class="ach-desc">${escHtml(a.description)}</div>
-      </div>
-      <div class="ach-scores">
-        <div class="ach-score-item"><div class="ach-score-val">${a.selfRating||'—'}</div><div class="ach-score-lbl">Self</div></div>
-        <div class="ach-score-item"><div class="ach-score-val">${avg||'—'}</div><div class="ach-score-lbl">Sabha Avg</div></div>
-        <div class="ach-score-item"><div class="ach-score-val">${voteCount}</div><div class="ach-score-lbl">Votes</div></div>
-        <button class="btn-danger" style="margin-left:auto" onclick="deleteAch('${a.id}');renderProfile()">Delete</button>
-      </div>
-    </div>`;
-  }).join('');
+  renderDeedList(document.getElementById('my-deeds-list'), myAchs, allRats, true);
 }
 
 // ══════════════════════════════════════════
 // ADMIN
 // ══════════════════════════════════════════
-function renderAdmin(){
-  const members = getMembers();
-  const container = document.getElementById('admin-members-list');
-  if(!members.length){ container.innerHTML='<div style="font-size:0.82rem;color:var(--text-dim)">No members yet.</div>'; return; }
+async function loadAdmin(){
+  const r = await sb('GET','members','','select=*&order=created_at.asc');
+  const members = (r.ok && r.data) ? r.data : [];
+  const container = document.getElementById('admin-list');
+  if(!members.length){ container.innerHTML='<div style="font-size:0.8rem;color:var(--text-dim)">No members yet.</div>'; return; }
   container.innerHTML = members.map(m=>`
-    <div class="member-row">
+    <div class="mem-row">
       <div>
-        <div class="member-row-name">${escHtml(m.name)} ${m.isAdmin?'<span class="badge-admin">Admin</span>':''}</div>
-        <div class="member-row-phone">${m.phone}</div>
+        <div class="mem-nm">${esc(m.name)}${m.is_admin?'<span class="badge-admin">Admin</span>':''}</div>
+        <div class="mem-ph">${esc(m.phone)}</div>
       </div>
-      ${!m.isAdmin?`<button class="btn-danger" onclick="adminRemoveMember('${m.id}')">Remove</button>`:'<span style="font-size:0.72rem;color:var(--text-dim)">Protected</span>'}
+      ${!m.is_admin?`<button class="btn-danger" onclick="adminRemove('${m.id}')">Remove</button>`:'<span style="font-size:0.68rem;color:var(--text-dim)">Protected</span>'}
     </div>`).join('');
 }
 
-function adminAddMember(){
-  const name = document.getElementById('admin-name').value.trim();
-  const phone = document.getElementById('admin-phone').value.trim().replace(/\D/g,'');
-  const pass = document.getElementById('admin-pass').value;
-  const isAdmin = document.getElementById('admin-is-admin').checked;
-  const msg = document.getElementById('admin-member-msg');
-  if(!name||!phone||!pass){ msg.textContent='All fields required.'; msg.style.color='var(--red)'; msg.style.display='block'; return; }
-  const members = getMembers();
-  if(members.find(m=>m.phone.replace(/\D/g,'')=== phone)){ msg.textContent='Phone already registered.'; msg.style.color='var(--red)'; msg.style.display='block'; return; }
-  members.push({ id: uid(), name, phone, password: pass, isAdmin, joinedAt: Date.now() });
-  DB.set('members', members);
-  document.getElementById('admin-name').value='';
-  document.getElementById('admin-phone').value='';
-  document.getElementById('admin-pass').value='';
-  document.getElementById('admin-is-admin').checked=false;
-  msg.textContent='Member added!'; msg.style.color='var(--green)'; msg.style.display='block';
-  setTimeout(()=>msg.style.display='none',2500);
-  renderAdmin();
-  buildFilterDropdowns();
-  renderHome();
+async function adminAddMember(){
+  const name=document.getElementById('a-name').value.trim();
+  const phone=document.getElementById('a-phone').value.trim().replace(/\D/g,'');
+  const pass=document.getElementById('a-pass').value;
+  const isAdmin=document.getElementById('a-admin').checked;
+  const msg=document.getElementById('a-msg');
+  if(!name||!phone||!pass){ msg.innerHTML='<div class="msg-err">All fields required.</div>'; return; }
+  const check=await sb('GET','members','',`phone=eq.${phone}&select=id`);
+  if(check.ok && check.data && check.data.length){ msg.innerHTML='<div class="msg-err">Phone already registered.</div>'; return; }
+  const r=await sb('POST','members',{name, phone, password:pass, is_admin:isAdmin});
+  if(!r.ok){ msg.innerHTML='<div class="msg-err">Failed to add member.</div>'; return; }
+  document.getElementById('a-name').value='';
+  document.getElementById('a-phone').value='';
+  document.getElementById('a-pass').value='';
+  document.getElementById('a-admin').checked=false;
+  msg.innerHTML='<div class="msg-ok">Member added successfully!</div>';
+  setTimeout(()=>msg.innerHTML='',2500);
+  loadAdmin(); loadMemberFilter(); loadHome();
 }
 
-function adminRemoveMember(id){
-  if(!confirm('Remove this member? Their deeds will also be deleted.')) return;
-  DB.set('members', getMembers().filter(m=>m.id!==id));
-  DB.set('achievements', getAchievements().filter(a=>a.memberId!==id));
-  DB.set('ratings', getRatings().filter(r=>r.raterId!==id));
-  renderAdmin();
-  buildFilterDropdowns();
-  renderHome();
-}
-
-// ══════════════════════════════════════════
-// MODAL HELPERS
-// ══════════════════════════════════════════
-function closeModal(id){ document.getElementById(id).classList.remove('open') }
-document.querySelectorAll('.modal-overlay').forEach(o=>{
-  o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); });
-});
-
-function escHtml(str){
-  if(!str) return '';
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+async function adminRemove(id){
+  if(!confirm('Remove this member and all their deeds?')) return;
+  const achs = await sb('GET','achievements','',`member_id=eq.${id}&select=id`);
+  if(achs.ok && achs.data) for(const a of achs.data){ await sb('DELETE','ratings','','achievement_id=eq.'+a.id); }
+  await sb('DELETE','achievements','','member_id=eq.'+id);
+  await sb('DELETE','ratings','','rater_id=eq.'+id);
+  await sb('DELETE','members','','id=eq.'+id);
+  loadAdmin(); loadMemberFilter(); loadHome();
 }
 
 // ══════════════════════════════════════════
-// BOOT
+// STARS
 // ══════════════════════════════════════════
-DB.init();
-const sess = currentUser();
-if(sess){
-  // Re-hydrate session from members list (in case data changed)
-  const fresh = getMembers().find(m=>m.id===sess.id);
-  if(fresh){ DB.set('session',fresh); startApp(); }
-  else{ DB.set('session',null); }
+function buildStars(rowId, hiddenId){
+  const row=document.getElementById(rowId); if(!row) return;
+  row.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const s=document.createElement('span');
+    s.className='star'; s.textContent='★'; s.dataset.v=i;
+    s.onclick=()=>{ document.getElementById(hiddenId).value=i; row.querySelectorAll('.star').forEach(st=>st.classList.toggle('on',parseInt(st.dataset.v)<=i)); };
+    row.appendChild(s);
+  }
 }
+function resetStars(rowId, hiddenId){ document.getElementById(hiddenId).value='0'; document.getElementById(rowId).querySelectorAll('.star').forEach(s=>s.classList.remove('on')); }
+
+// ══════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
 </script>
 </body>
 </html>
