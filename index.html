@@ -180,6 +180,30 @@ textarea.form-input{resize:vertical;min-height:75px}
 .badge-admin{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid var(--border-gold);margin-left:5px}
 .msg-ok{font-size:0.76rem;color:var(--green);margin-top:6px}
 .msg-err{font-size:0.76rem;color:var(--red);margin-top:6px}
+
+/* CHAMPIONS */
+.champ-year{margin-bottom:2.5rem}
+.champ-year-hdr{display:flex;align-items:center;gap:1rem;padding:1rem 1.4rem;background:var(--bg-card);border:1px solid var(--border-gold);border-radius:10px;margin-bottom:1rem;flex-wrap:wrap}
+.champ-year-hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.champ-year-num{font-family:'Cinzel',serif;font-size:2rem;font-weight:900;color:var(--gold);flex-shrink:0}
+.champ-year-sep{flex:1;height:1px;background:var(--border-gold);opacity:0.3;min-width:16px}
+.champ-year-right{text-align:right}
+.champ-year-lbl{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim)}
+.champ-year-name{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold)}
+.champ-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.85rem}
+.champ-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color 0.2s}
+.champ-card:hover{border-color:var(--border-gold)}
+.champ-card.main-winner{border-color:var(--gold)}
+.champ-card-top{height:90px;background:linear-gradient(135deg,var(--bg-card2),var(--bg));display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+.champ-card.main-winner .champ-card-top{background:linear-gradient(135deg,rgba(201,168,76,0.12),var(--bg))}
+.champ-card-body{padding:10px 12px}
+.champ-card-award{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:3px}
+.champ-card.main-winner .champ-card-award{color:var(--gold)}
+.champ-card-name{font-size:0.88rem;font-weight:600;color:var(--text)}
+.champ-card-note{font-size:0.72rem;color:var(--text-dim);margin-top:3px;line-height:1.4}
+.msg-ok{font-size:0.76rem;color:var(--green);margin-top:6px}
+.msg-err{font-size:0.76rem;color:var(--red);margin-top:6px}
+
 </style>
 </head>
 <body>
@@ -199,6 +223,7 @@ textarea.form-input{resize:vertical;min-height:75px}
     <button class="nav-tab active" onclick="showPage('home')">Home</button>
     <button class="nav-tab" onclick="showPage('deeds')">Deeds</button>
     <button class="nav-tab" onclick="showPage('profile')">My Profile</button>
+    <button class="nav-tab" onclick="showPage('champions')">Champions</button>
     <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin')">Admin</button>
   </div>
   <div class="nav-right">
@@ -241,7 +266,7 @@ textarea.form-input{resize:vertical;min-height:75px}
   <!-- HOME -->
   <div class="page active" id="page-home">
     <div class="hero">
-      <div class="hero-overline">Season IV · 2025</div>
+      <div class="hero-overline">Season V · 2026</div>
       <span class="hero-keg">🍺</span>
       <h1 class="hero-title">THE KEG SABHA</h1>
       <p class="hero-tag">One Keg. One Sabha. One Champion.</p>
@@ -300,6 +325,16 @@ textarea.form-input{resize:vertical;min-height:75px}
     </div>
   </div>
 
+
+  <!-- CHAMPIONS -->
+  <div class="page" id="page-champions">
+    <div class="page-title-sec">
+      <h1 class="page-title">Hall of Champions</h1>
+      <p class="page-sub">Every winner. Every season. Preserved forever.</p>
+    </div>
+    <div id="champions-list" style="margin-top:1.5rem"></div>
+  </div>
+
   <!-- ADMIN -->
   <div class="page" id="page-admin">
     <div class="page-title-sec"><h1 class="page-title">Admin Panel</h1><p class="page-sub">Manage the Brotherhood.</p></div>
@@ -316,6 +351,27 @@ textarea.form-input{resize:vertical;min-height:75px}
       <div class="admin-card">
         <h3>▸ Current Members</h3>
         <div id="admin-list"></div>
+      </div>
+    </div>
+
+    <div class="admin-card" style="grid-column:1/-1;margin-top:0.5rem">
+      <h3>▸ Past Season Winners</h3>
+      <p style="font-size:0.76rem;color:var(--text-dim);margin-bottom:1rem">Add or edit winners for each season. These appear on the Champions page for all members.</p>
+      <div id="winners-admin-list" style="margin-bottom:1.25rem"></div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.1rem">
+        <div style="font-family:'Cinzel',serif;font-size:0.72rem;color:var(--gold-dark);letter-spacing:0.1em;margin-bottom:1rem">ADD / EDIT WINNER</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;flex-wrap:wrap">
+          <div class="form-group" style="margin:0"><label class="form-label">Year</label><input class="form-input" id="w-year" type="number" placeholder="e.g. 2023" /></div>
+          <div class="form-group" style="margin:0"><label class="form-label">Award Title</label><input class="form-input" id="w-award" placeholder="e.g. Keeper of the Keg" /></div>
+          <div class="form-group" style="margin:0"><label class="form-label">Winner Name</label><input class="form-input" id="w-name" placeholder="Full name" /></div>
+          <div class="form-group" style="margin:0"><label class="form-label">Notable Deed / Note</label><input class="form-input" id="w-note" placeholder="e.g. Acquired a company" /></div>
+          <div class="form-group" style="margin:0"><label class="form-label">Emoji / Icon</label><input class="form-input" id="w-emoji" placeholder="e.g. 🏆" style="font-size:1.2rem" /></div>
+          <div class="form-group" style="margin:0;display:flex;align-items:flex-end">
+            <button class="btn-gold" onclick="adminSaveWinner()" style="width:100%">Save Winner</button>
+          </div>
+        </div>
+        <input type="hidden" id="w-edit-id" value="" />
+        <div id="w-msg" style="margin-top:8px"></div>
       </div>
     </div>
   </div>
@@ -379,6 +435,7 @@ async function sb(method, table, body, params=''){
   if(method==='GET') opts.headers['Accept']='application/json';
   if(method==='POST') opts.headers['Prefer']='return=representation';
   if(method==='DELETE') opts.headers['Prefer']='return=representation';
+  if(method==='PATCH') opts.headers['Prefer']='return=representation';
   const res = await fetch(url, opts);
   const text = await res.text();
   try{ return {ok: res.ok, status: res.status, data: text ? JSON.parse(text) : null}; }
@@ -486,13 +543,14 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   const p = document.getElementById('page-'+id); if(p) p.classList.add('active');
-  const map={home:0,deeds:1,profile:2,admin:3};
+  const map={home:0,deeds:1,profile:2,champions:3,admin:4};
   const tabs=document.querySelectorAll('.nav-tab');
   if(map[id]!==undefined && tabs[map[id]]) tabs[map[id]].classList.add('active');
   window.scrollTo(0,0);
   if(id==='home') loadHome();
   if(id==='deeds') loadDeeds();
   if(id==='profile') loadProfile();
+  if(id==='champions') loadChampions();
   if(id==='admin') loadAdmin();
 }
 
@@ -760,6 +818,7 @@ async function loadProfile(){
 // ADMIN
 // ══════════════════════════════════════════
 async function loadAdmin(){
+  loadWinnersAdmin();
   const r = await sb('GET','members','','select=*&order=created_at.asc');
   const members = (r.ok && r.data) ? r.data : [];
   const container = document.getElementById('admin-list');
@@ -802,6 +861,122 @@ async function adminRemove(id){
   await sb('DELETE','ratings','','rater_id=eq.'+id);
   await sb('DELETE','members','','id=eq.'+id);
   loadAdmin(); loadMemberFilter(); loadHome();
+}
+
+
+// ══════════════════════════════════════════
+// CHAMPIONS
+// ══════════════════════════════════════════
+async function loadChampions(){
+  const container = document.getElementById('champions-list');
+  container.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text-dim)"><div class="spin" style="margin:auto"></div></div>';
+  const r = await sb('GET','past_winners','','select=*&order=year.desc,is_main_winner.desc,created_at.asc');
+  const winners = (r.ok && r.data) ? r.data : [];
+  if(!winners.length){
+    container.innerHTML='<div class="empty"><span class="empty-icon">🏆</span>No past winners recorded yet. Ask your admin to add them.</div>';
+    return;
+  }
+  // Group by year
+  const byYear = {};
+  winners.forEach(w=>{ if(!byYear[w.year]) byYear[w.year]=[]; byYear[w.year].push(w); });
+  const years = Object.keys(byYear).sort((a,b)=>b-a);
+  container.innerHTML = years.map(yr=>{
+    const main = byYear[yr].find(w=>w.is_main_winner) || byYear[yr][0];
+    const cards = byYear[yr].map(w=>`
+      <div class="champ-card${w.is_main_winner?' main-winner':''}">
+        <div class="champ-card-top">${esc(w.emoji||'🏆')}</div>
+        <div class="champ-card-body">
+          <div class="champ-card-award">${esc(w.award_title)}</div>
+          <div class="champ-card-name">${esc(w.winner_name)}</div>
+          ${w.note?`<div class="champ-card-note">${esc(w.note)}</div>`:''}
+        </div>
+      </div>`).join('');
+    return `<div class="champ-year">
+      <div class="champ-year-hdr" style="position:relative;overflow:hidden">
+        <div class="champ-year-num">${yr}</div>
+        <div class="champ-year-sep"></div>
+        <div class="champ-year-right">
+          <div class="champ-year-lbl">Keeper of the Keg</div>
+          <div class="champ-year-name">🏆 ${esc(main.winner_name)}</div>
+        </div>
+      </div>
+      <div class="champ-cards">${cards}</div>
+    </div>`;
+  }).join('');
+}
+
+async function loadWinnersAdmin(){
+  const r = await sb('GET','past_winners','','select=*&order=year.desc,is_main_winner.desc,created_at.asc');
+  const winners = (r.ok && r.data) ? r.data : [];
+  const container = document.getElementById('winners-admin-list');
+  if(!winners.length){ container.innerHTML='<div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.5rem">No winners added yet.</div>'; return; }
+  const byYear = {};
+  winners.forEach(w=>{ if(!byYear[w.year]) byYear[w.year]=[]; byYear[w.year].push(w); });
+  const years = Object.keys(byYear).sort((a,b)=>b-a);
+  container.innerHTML = years.map(yr=>`
+    <div style="margin-bottom:0.75rem">
+      <div style="font-family:'Cinzel',serif;font-size:0.72rem;color:var(--gold-dark);letter-spacing:0.12em;margin-bottom:5px">${yr}</div>
+      ${byYear[yr].map(w=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);gap:8px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:1.1rem">${esc(w.emoji||'🏆')}</span>
+            <div>
+              <div style="font-size:0.82rem;font-weight:600">${esc(w.winner_name)} ${w.is_main_winner?'<span style="font-size:0.6rem;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid var(--border-gold);padding:1px 6px;border-radius:3px">KEEPER</span>':''}</div>
+              <div style="font-size:0.7rem;color:var(--text-dim)">${esc(w.award_title)}${w.note?' · '+esc(w.note):''}</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn-outline" style="padding:4px 10px;font-size:0.68rem" onclick="editWinner('${w.id}','${yr}',${JSON.stringify(w.award_title).replace(/'/g,"&#39;")},${JSON.stringify(w.winner_name).replace(/'/g,"&#39;")},${JSON.stringify(w.note||'').replace(/'/g,"&#39;")},${JSON.stringify(w.emoji||'').replace(/'/g,"&#39;")})">Edit</button>
+            <button class="btn-danger" style="padding:4px 10px" onclick="deleteWinner('${w.id}')">Delete</button>
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function editWinner(id, year, award, name, note, emoji){
+  document.getElementById('w-edit-id').value=id;
+  document.getElementById('w-year').value=year;
+  document.getElementById('w-award').value=award;
+  document.getElementById('w-name').value=name;
+  document.getElementById('w-note').value=note;
+  document.getElementById('w-emoji').value=emoji;
+  document.getElementById('w-msg').innerHTML='<div style="font-size:0.74rem;color:var(--gold)">Editing existing entry — save to update.</div>';
+}
+
+async function adminSaveWinner(){
+  const editId = document.getElementById('w-edit-id').value;
+  const year = parseInt(document.getElementById('w-year').value)||0;
+  const award = document.getElementById('w-award').value.trim();
+  const name = document.getElementById('w-name').value.trim();
+  const note = document.getElementById('w-note').value.trim();
+  const emoji = document.getElementById('w-emoji').value.trim();
+  const msg = document.getElementById('w-msg');
+  if(!year||!award||!name){ msg.innerHTML='<div class="msg-err">Year, award title and winner name are required.</div>'; return; }
+  const isMain = award.toLowerCase().includes('keeper') || award.toLowerCase().includes('champion');
+  const payload = {year, award_title:award, winner_name:name, note:note||null, emoji:emoji||'🏆', is_main_winner:isMain};
+  let r;
+  if(editId){
+    r = await sb('PATCH','past_winners',payload,`id=eq.${editId}`);
+  } else {
+    r = await sb('POST','past_winners',payload);
+  }
+  if(!r.ok){ msg.innerHTML='<div class="msg-err">Failed to save. Check Supabase.</div>'; console.error(r); return; }
+  // Clear form
+  document.getElementById('w-edit-id').value='';
+  document.getElementById('w-year').value='';
+  document.getElementById('w-award').value='';
+  document.getElementById('w-name').value='';
+  document.getElementById('w-note').value='';
+  document.getElementById('w-emoji').value='';
+  msg.innerHTML='<div class="msg-ok">Saved!</div>';
+  setTimeout(()=>msg.innerHTML='',2000);
+  loadWinnersAdmin();
+}
+
+async function deleteWinner(id){
+  if(!confirm('Delete this winner entry?')) return;
+  await sb('DELETE','past_winners','','id=eq.'+id);
+  loadWinnersAdmin();
 }
 
 // ══════════════════════════════════════════
