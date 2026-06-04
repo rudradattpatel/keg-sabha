@@ -204,6 +204,35 @@ textarea.form-input{resize:vertical;min-height:75px}
 .msg-ok{font-size:0.76rem;color:var(--green);margin-top:6px}
 .msg-err{font-size:0.76rem;color:var(--red);margin-top:6px}
 
+
+/* EVENTS */
+.events-section{margin-top:2rem}
+.event-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:0.9rem;transition:border-color 0.2s}
+.event-card:hover{border-color:var(--border-gold)}
+.event-card-top{display:flex;gap:1rem;padding:1rem 1.1rem 0.85rem;align-items:flex-start}
+.event-emoji{font-size:2rem;width:48px;height:48px;background:var(--bg-card2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.event-info{flex:1;min-width:0}
+.event-title{font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:3px}
+.event-date{font-size:0.75rem;color:var(--gold-dark);font-family:'Cinzel',serif;margin-bottom:3px}
+.event-loc{font-size:0.74rem;color:var(--text-dim)}
+.event-desc{font-size:0.78rem;color:var(--text-muted);margin-top:4px;line-height:1.5}
+.event-footer{padding:0.65rem 1.1rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vote-btn{padding:5px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;border:1px solid var(--border);background:none;color:var(--text-muted)}
+.vote-btn:hover{border-color:var(--border-gold);color:var(--gold)}
+.vote-btn.going{border-color:var(--green);color:var(--green);background:rgba(90,154,90,0.1)}
+.vote-btn.maybe{border-color:var(--gold-dark);color:var(--gold);background:rgba(201,168,76,0.08)}
+.vote-btn.not_going{border-color:var(--red);color:var(--red);background:rgba(204,68,68,0.08)}
+.vote-counts{display:flex;gap:10px;margin-left:auto;font-size:0.72rem;color:var(--text-dim)}
+.vote-count-item{display:flex;align-items:center;gap:4px}
+.admin-del-btn{padding:4px 8px;background:none;color:var(--text-dim);border:1px solid var(--border);border-radius:5px;font-size:0.68rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;margin-left:4px}
+.admin-del-btn:hover{border-color:var(--red);color:var(--red)}
+/* PHOTO UPLOAD */
+.photo-upload-wrap{border:2px dashed var(--border);border-radius:8px;padding:1rem;text-align:center;cursor:pointer;transition:border-color 0.2s;position:relative;overflow:hidden}
+.photo-upload-wrap:hover{border-color:var(--border-gold)}
+.photo-upload-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.photo-preview{width:100%;max-height:200px;object-fit:cover;border-radius:6px;margin-top:8px;display:none}
+.champ-card-img{width:100%;height:140px;object-fit:cover;object-position:top}
+
 </style>
 </head>
 <body>
@@ -277,6 +306,14 @@ textarea.form-input{resize:vertical;min-height:75px}
       <span id="home-count" style="font-size:0.72rem;color:var(--text-dim)"></span>
     </div>
     <div id="home-members"></div>
+
+    <div class="events-section">
+      <div class="section-hdr">
+        <span class="section-title">Upcoming Gatherings</span>
+        <span id="admin-add-event-btn" style="display:none"><button class="btn-gold" style="font-size:0.68rem;padding:5px 12px" onclick="openEventModal()">+ Add Event</button></span>
+      </div>
+      <div id="home-events"></div>
+    </div>
   </div>
 
   <!-- DEEDS -->
@@ -530,6 +567,7 @@ function startApp(){
   document.getElementById('main-app').style.display='block';
   document.getElementById('nav-user').innerHTML='Hey, <span>'+esc(SESSION.name)+'</span>';
   if(SESSION.is_admin) document.getElementById('admin-tab').style.display='inline-block';
+  if(SESSION.is_admin) { const b=document.getElementById('admin-add-event-btn'); if(b) b.style.display='block'; }
   buildStars('self-star-row','m-self');
   buildStars('rate-star-row','r-val');
   loadMemberFilter();
@@ -561,6 +599,7 @@ async function loadHome(){
   const container = document.getElementById('home-members');
   container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-dim)"><div class="spin" style="margin:auto"></div></div>';
 
+  loadEvents();
   const [mRes, aRes, rRes] = await Promise.all([
     sb('GET','members','','is_admin=eq.false&select=*&order=created_at.asc'),
     sb('GET','achievements','','select=*'),
@@ -884,7 +923,7 @@ async function loadChampions(){
     const main = byYear[yr].find(w=>w.is_main_winner) || byYear[yr][0];
     const cards = byYear[yr].map(w=>`
       <div class="champ-card${w.is_main_winner?' main-winner':''}">
-        <div class="champ-card-top">${esc(w.emoji||'🏆')}</div>
+        ${w.photo_url?`<img class='champ-card-img' src='${esc(w.photo_url)}' onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class='champ-card-top' style='display:none'>${esc(w.emoji||'🏆')}</div>`:`<div class='champ-card-top'>${esc(w.emoji||'🏆')}</div>`}
         <div class="champ-card-body">
           <div class="champ-card-award">${esc(w.award_title)}</div>
           <div class="champ-card-name">${esc(w.winner_name)}</div>
@@ -926,6 +965,7 @@ async function loadWinnersAdmin(){
             </div>
           </div>
           <div style="display:flex;gap:6px">
+            <button class="btn-outline" style="padding:4px 10px;font-size:0.68rem" onclick="openPhotoModal('${w.id}',${JSON.stringify(w.winner_name)})">📷</button>
             <button class="btn-outline" style="padding:4px 10px;font-size:0.68rem" onclick="editWinner('${w.id}','${yr}',${JSON.stringify(w.award_title).replace(/'/g,"&#39;")},${JSON.stringify(w.winner_name).replace(/'/g,"&#39;")},${JSON.stringify(w.note||'').replace(/'/g,"&#39;")},${JSON.stringify(w.emoji||'').replace(/'/g,"&#39;")})">Edit</button>
             <button class="btn-danger" style="padding:4px 10px" onclick="deleteWinner('${w.id}')">Delete</button>
           </div>
@@ -979,6 +1019,140 @@ async function deleteWinner(id){
   loadWinnersAdmin();
 }
 
+
+// ══════════════════════════════════════════
+// EVENTS
+// ══════════════════════════════════════════
+async function loadEvents(){
+  const container = document.getElementById('home-events');
+  if(!container) return;
+  container.innerHTML='<div style="text-align:center;padding:1rem;color:var(--text-dim)"><div class="spin" style="margin:0 auto"></div></div>';
+  const today = new Date().toISOString().slice(0,10);
+  const [evRes, votRes] = await Promise.all([
+    sb('GET','events','',`event_date=gte.${today}&select=*&order=event_date.asc`),
+    sb('GET','event_votes','',`select=*`)
+  ]);
+  const events = (evRes.ok && evRes.data) ? evRes.data : [];
+  const allVotes = (votRes.ok && votRes.data) ? votRes.data : [];
+
+  if(!events.length){
+    container.innerHTML='<div class="empty" style="padding:2rem"><span class="empty-icon">📅</span>'+(SESSION&&SESSION.is_admin?'No upcoming events. Add one above.':'No upcoming gatherings yet.')+' </div>';
+    return;
+  }
+  container.innerHTML='';
+  events.forEach(ev=>{
+    const myVote = allVotes.find(v=>v.event_id===ev.id && v.member_id===SESSION.id);
+    const goingCount = allVotes.filter(v=>v.event_id===ev.id && v.vote==='going').length;
+    const maybeCount = allVotes.filter(v=>v.event_id===ev.id && v.vote==='maybe').length;
+    const noCount = allVotes.filter(v=>v.event_id===ev.id && v.vote==='not_going').length;
+    const d = new Date(ev.event_date+'T12:00:00');
+    const dateStr = d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
+    const daysAway = Math.ceil((d - new Date())/(1000*60*60*24));
+    const countdown = daysAway===0?'Today!':daysAway===1?'Tomorrow':`${daysAway} days away`;
+    const card = document.createElement('div');
+    card.className='event-card';
+    card.innerHTML=`
+      <div class="event-card-top">
+        <div class="event-emoji">${esc(ev.emoji||'📅')}</div>
+        <div class="event-info">
+          <div class="event-title">${esc(ev.title)}</div>
+          <div class="event-date">📅 ${dateStr} · <span style="color:var(--gold)">${countdown}</span></div>
+          ${ev.location?`<div class="event-loc">📍 ${esc(ev.location)}</div>`:''}
+          ${ev.description?`<div class="event-desc">${esc(ev.description)}</div>`:''}
+        </div>
+        ${SESSION&&SESSION.is_admin?`<button class="admin-del-btn" onclick="deleteEvent('${ev.id}')">✕</button>`:''}
+      </div>
+      <div class="event-footer">
+        <span style="font-size:0.72rem;color:var(--text-dim);margin-right:4px">Your RSVP:</span>
+        <button class="vote-btn ${myVote&&myVote.vote==='going'?'going':''}" onclick="castVote('${ev.id}','going')">✅ Going</button>
+        <button class="vote-btn ${myVote&&myVote.vote==='maybe'?'maybe':''}" onclick="castVote('${ev.id}','maybe')">🤔 Maybe</button>
+        <button class="vote-btn ${myVote&&myVote.vote==='not_going'?'not_going':''}" onclick="castVote('${ev.id}','not_going')">❌ Can't Go</button>
+        <div class="vote-counts">
+          <span class="vote-count-item" style="color:var(--green)">✅ ${goingCount}</span>
+          <span class="vote-count-item" style="color:var(--gold-dark)">🤔 ${maybeCount}</span>
+          <span class="vote-count-item" style="color:var(--red)">❌ ${noCount}</span>
+        </div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+function openEventModal(){
+  document.getElementById('ev-title').value='';
+  document.getElementById('ev-date').value='';
+  document.getElementById('ev-loc').value='';
+  document.getElementById('ev-desc').value='';
+  document.getElementById('ev-emoji').value='';
+  document.getElementById('ev-msg').textContent='';
+  document.getElementById('event-modal').classList.add('open');
+}
+
+async function submitEvent(){
+  const title=document.getElementById('ev-title').value.trim();
+  const date=document.getElementById('ev-date').value;
+  const loc=document.getElementById('ev-loc').value.trim();
+  const desc=document.getElementById('ev-desc').value.trim();
+  const emoji=document.getElementById('ev-emoji').value.trim();
+  const msg=document.getElementById('ev-msg');
+  if(!title||!date){msg.innerHTML='<span style="color:var(--red)">Title and date are required.</span>';return;}
+  const btn=document.getElementById('ev-save-btn');
+  btn.disabled=true;btn.innerHTML='<div class="spin"></div> Saving...';
+  const r=await sb('POST','events',{title,event_date:date,location:loc||null,description:desc||null,emoji:emoji||'📅',created_by:SESSION.id});
+  btn.disabled=false;btn.textContent='Save Gathering';
+  if(!r.ok){msg.innerHTML='<span style="color:var(--red)">Failed to save.</span>';return;}
+  closeModal('event-modal');
+  loadEvents();
+}
+
+async function deleteEvent(id){
+  if(!confirm('Delete this event?'))return;
+  await sb('DELETE','event_votes','','event_id=eq.'+id);
+  await sb('DELETE','events','','id=eq.'+id);
+  loadEvents();
+}
+
+async function castVote(eventId, vote){
+  // Upsert: delete existing then insert
+  await sb('DELETE','event_votes','',`event_id=eq.${eventId}&member_id=eq.${SESSION.id}`);
+  await sb('POST','event_votes',{event_id:eventId,member_id:SESSION.id,vote});
+  loadEvents();
+}
+
+// ══════════════════════════════════════════
+// WINNER PHOTO
+// ══════════════════════════════════════════
+function openPhotoModal(id, name){
+  document.getElementById('photo-winner-id').value=id;
+  document.getElementById('photo-modal-info').textContent='Adding photo for: '+name;
+  document.getElementById('photo-url-input').value='';
+  document.getElementById('photo-preview-img').style.display='none';
+  document.getElementById('photo-preview-img').src='';
+  document.getElementById('photo-msg').textContent='';
+  document.getElementById('photo-modal').classList.add('open');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp=document.getElementById('photo-url-input');
+  if(inp){
+    inp.addEventListener('input',()=>{
+      const img=document.getElementById('photo-preview-img');
+      img.src=inp.value;
+    });
+  }
+});
+
+async function saveWinnerPhoto(){
+  const id=document.getElementById('photo-winner-id').value;
+  const url=document.getElementById('photo-url-input').value.trim();
+  const msg=document.getElementById('photo-msg');
+  if(!url){msg.innerHTML='<span style="color:var(--red)">Please enter a photo URL.</span>';return;}
+  const r=await sb('PATCH','past_winners',{photo_url:url},'id=eq.'+id);
+  if(!r.ok){msg.innerHTML='<span style="color:var(--red)">Failed to save photo.</span>';return;}
+  msg.innerHTML='<span style="color:var(--green)">Photo saved!</span>';
+  setTimeout(()=>closeModal('photo-modal'),800);
+  loadWinnersAdmin();
+}
+
 // ══════════════════════════════════════════
 // STARS
 // ══════════════════════════════════════════
@@ -1000,5 +1174,41 @@ function resetStars(rowId, hiddenId){ document.getElementById(hiddenId).value='0
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
 </script>
+
+<!-- ADD EVENT MODAL -->
+<div class="modal-overlay" id="event-modal">
+  <div class="modal" style="max-width:460px">
+    <button class="modal-close" onclick="closeModal('event-modal')">✕</button>
+    <div class="modal-title">Add Upcoming Gathering</div>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ev-title" placeholder="e.g. Pebble Beach Golf Trip" /></div>
+    <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="ev-date" type="date" /></div>
+    <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ev-loc" placeholder="e.g. Pebble Beach, CA" /></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="ev-desc" placeholder="Tell them what's happening..."></textarea></div>
+    <div class="form-group"><label class="form-label">Emoji / Icon</label><input class="form-input" id="ev-emoji" placeholder="e.g. ⛳ 🍺 🎲 ✈️" style="font-size:1.1rem" /></div>
+    <button class="btn-primary" id="ev-save-btn" onclick="submitEvent()">Save Gathering</button>
+    <div id="ev-msg" style="margin-top:6px;font-size:0.76rem"></div>
+  </div>
+</div>
+
+<!-- WINNER PHOTO MODAL -->
+<div class="modal-overlay" id="photo-modal">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="closeModal('photo-modal')">✕</button>
+    <div class="modal-title">Upload Winner Photo</div>
+    <div id="photo-modal-info" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem"></div>
+    <div class="form-group">
+      <label class="form-label">Photo URL (paste image link)</label>
+      <input class="form-input" id="photo-url-input" placeholder="https://..." />
+      <div style="font-size:0.7rem;color:var(--text-dim);margin-top:5px">Tip: Upload your photo to <a href="https://imgur.com" target="_blank" style="color:var(--gold-dark)">imgur.com</a> or any image host, then paste the direct link here.</div>
+    </div>
+    <div style="margin-top:0.5rem;text-align:center">
+      <img id="photo-preview-img" src="" style="display:none;max-width:100%;max-height:200px;border-radius:8px;object-fit:cover;border:1px solid var(--border-gold)" onerror="this.style.display='none'" onload="this.style.display='block'" />
+    </div>
+    <input type="hidden" id="photo-winner-id" />
+    <button class="btn-primary" style="margin-top:1rem" onclick="saveWinnerPhoto()">Save Photo</button>
+    <div id="photo-msg" style="margin-top:6px;font-size:0.76rem"></div>
+  </div>
+</div>
+
 </body>
 </html>
